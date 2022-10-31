@@ -24,7 +24,7 @@ public class AuthEntryPointJWT implements AuthenticationEntryPoint {
             AuthenticationException authException
     ) throws IOException {
 
-        log.error("Unauthorized error: {}", authException.getMessage());
+        log.error("unauthorized error: {}", authException.getMessage());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
@@ -36,6 +36,7 @@ public class AuthEntryPointJWT implements AuthenticationEntryPoint {
 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
+
     }
 
 }

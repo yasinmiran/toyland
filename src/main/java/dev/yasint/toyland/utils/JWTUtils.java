@@ -22,6 +22,8 @@ public class JWTUtils {
     private int jwtExpirationMs;
     @Value("${toyland.app.jwtCookieName}")
     private String jwtCookie;
+    @Value("${toyland.app.jwtCookiePath}")
+    private String jwtCookiePath;
 
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
@@ -45,7 +47,7 @@ public class JWTUtils {
     public ResponseCookie getCleanJwtCookie() {
         return ResponseCookie
                 .from(jwtCookie, null)
-                .path("/api")
+                .path(jwtCookiePath)
                 .build();
     }
 

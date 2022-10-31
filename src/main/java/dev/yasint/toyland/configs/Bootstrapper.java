@@ -31,8 +31,7 @@ public class Bootstrapper {
                     new Role(ERole.MERCHANT),
                     new Role(ERole.DRIVER)
             );
-            List<Role> saved = userService.saveAllRoles(roles);
-            log.info("saved {} roles", saved);
+            userService.saveAllRoles(roles);
         };
     }
 
@@ -44,7 +43,7 @@ public class Bootstrapper {
             @Autowired PasswordEncoder encoder
     ) {
         return (String... args) -> {
-            if (!userRepository.existsByEmail("admin@toyland.com")) {
+            if (!userRepository.existsByUsername("admin@toyland.com")) {
                 User admin = new User(
                         "admin@toyland.com",
                         encoder.encode("admin123")
