@@ -1,8 +1,8 @@
 package dev.yasint.toyland.configs;
 
-import dev.yasint.toyland.models.ERole;
+import dev.yasint.toyland.models.BasicUser;
+import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.Role;
-import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.repositories.RoleRepository;
 import dev.yasint.toyland.repositories.UserRepository;
 import dev.yasint.toyland.services.UserService;
@@ -44,7 +44,7 @@ public class Bootstrapper {
     ) {
         return (String... args) -> {
             if (!userRepository.existsByUsername("admin@toyland.com")) {
-                User admin = new User(
+                BasicUser admin = new BasicUser(
                         "admin@toyland.com",
                         encoder.encode("admin123")
                 );

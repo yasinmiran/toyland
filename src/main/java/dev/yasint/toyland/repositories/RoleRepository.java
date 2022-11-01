@@ -1,6 +1,6 @@
 package dev.yasint.toyland.repositories;
 
-import dev.yasint.toyland.models.ERole;
+import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

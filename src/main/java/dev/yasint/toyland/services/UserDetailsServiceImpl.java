@@ -1,6 +1,6 @@
 package dev.yasint.toyland.services;
 
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.BasicUser;
 import dev.yasint.toyland.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +21,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        BasicUser basicUser = userRepository.findByUsername(username)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(
                                 "User Not Found with username: " + username
                         )
                 );
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(basicUser);
     }
 
 }

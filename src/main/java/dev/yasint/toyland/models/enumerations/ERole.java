@@ -1,4 +1,4 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.enumerations;
 
 public enum ERole {
     ADMIN,

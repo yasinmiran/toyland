@@ -21,7 +21,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username")
         }
 )
-public class User {
+public class BasicUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +42,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password) {
+    public BasicUser(String username, String password) {
         this.username = username;
         this.password = password;
     }

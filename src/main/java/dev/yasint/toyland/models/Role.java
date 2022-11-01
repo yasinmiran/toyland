@@ -1,8 +1,8 @@
 package dev.yasint.toyland.models;
 
+import dev.yasint.toyland.models.enumerations.ERole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 

@@ -1,9 +1,9 @@
 package dev.yasint.toyland.controllers;
 
 import dev.yasint.toyland.dtos.*;
-import dev.yasint.toyland.models.ERole;
+import dev.yasint.toyland.models.BasicUser;
+import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.Role;
-import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.repositories.RoleRepository;
 import dev.yasint.toyland.repositories.UserRepository;
 import dev.yasint.toyland.services.UserDetailsImpl;
@@ -85,7 +85,7 @@ public class AuthControllerImpl implements AuthController {
                     );
         }
 
-        final User user = new User(
+        final BasicUser basicUser = new BasicUser(
                 signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword())
         );
@@ -100,8 +100,8 @@ public class AuthControllerImpl implements AuthController {
                     .body(new MessageResponseDTO("cannot register at this time"));
         }
 
-        user.setRoles(new HashSet<>(List.of(userRole)));
-        userRepository.save(user);
+        basicUser.setRoles(new HashSet<>(List.of(userRole)));
+        userRepository.save(basicUser);
         return ResponseEntity.ok(new MessageResponseDTO("user registered successfully!"));
 
     }

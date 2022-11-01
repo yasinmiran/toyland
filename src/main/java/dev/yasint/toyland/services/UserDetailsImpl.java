@@ -1,7 +1,7 @@
 package dev.yasint.toyland.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.BasicUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,14 +25,14 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+    public static UserDetailsImpl build(BasicUser basicUser) {
+        List<GrantedAuthority> authorities = basicUser.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
         return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
+                basicUser.getId(),
+                basicUser.getUsername(),
+                basicUser.getPassword(),
                 authorities
         );
     }
