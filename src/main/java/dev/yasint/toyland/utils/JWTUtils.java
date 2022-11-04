@@ -46,7 +46,7 @@ public class JWTUtils {
 
     public ResponseCookie getCleanJwtCookie() {
         return ResponseCookie
-                .from(jwtCookie, null)
+                .from(jwtCookie, "")
                 .path(jwtCookiePath)
                 .build();
     }
