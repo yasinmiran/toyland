@@ -51,6 +51,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
+        final String CUSTOM_AUTH_TOKEN = "X-AUTH-TOKEN";
+        if (request.getHeader(CUSTOM_AUTH_TOKEN) != null) {
+            return request.getHeader(CUSTOM_AUTH_TOKEN);
+        }
         return jwtUtils.getJwtFromCookies(request);
     }
 
