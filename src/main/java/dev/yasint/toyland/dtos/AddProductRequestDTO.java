@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddProductRequestDTO {
 
-    private Long userId;
     private String name;
     private Double price;
 

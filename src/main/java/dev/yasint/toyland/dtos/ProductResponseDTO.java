@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponseDTO extends Product {
+public class ProductResponseDTO {
 
     private Long id;
-    private Long merchantId;
+    private Long merchant_id;
     private String name;
     private Double price;
 

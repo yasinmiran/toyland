@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeleteProductRequestDTO {
 
-    private Long userId;
     private Long productId;
 
 }

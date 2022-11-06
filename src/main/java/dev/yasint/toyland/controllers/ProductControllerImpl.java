@@ -1,7 +1,9 @@
 package dev.yasint.toyland.controllers;
 
 import dev.yasint.toyland.dtos.*;
+import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.Product;
+import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
 import dev.yasint.toyland.services.UserDetailsImpl;
 import org.modelmapper.ModelMapper;
@@ -10,35 +12,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/merchant")
+@RequestMapping("/api/test/product")
 public class ProductControllerImpl implements ProductController {
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private MerchantRepository merchantRepository;
+
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Override
     @PostMapping("/delete-product")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> deleteProduct(DeleteProductRequestDTO deleteProductRequest) {
+    public ResponseEntity<?> deleteProduct(@Valid @RequestBody DeleteProductRequestDTO deleteProductRequest) {
+
+        UserDetailsImpl userDetails = getUserDetails();
+
+        Merchant merchant = merchantRepository.findByUserId(userDetails.getId());
 
         Product product = productRepository
                 .findById(deleteProductRequest.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
 
-        if (!product.getMerchantId().equals(deleteProductRequest.getUserId())) {
+        if (!product.getMerchantId().equals(merchant.getId())) {
             return ResponseEntity
                     .badRequest()
                     .body(
@@ -54,12 +61,17 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @PostMapping("/add-product")
     @PreAuthorize("hasAuthority('MERCHANT')")
-    public ResponseEntity<?> addProduct(AddProductRequestDTO addProductRequest) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody AddProductRequestDTO addProductRequest) {
 
+        UserDetailsImpl userDetails = getUserDetails();
+
+        Merchant merchant = merchantRepository.findByUserId(userDetails.getId());
+
+        System.out.println(addProductRequest);
         if (productRepository.
                 findByNameAndPriceAndMerchantId(addProductRequest.getName(),
                         addProductRequest.getPrice(),
-                        addProductRequest.getUserId())
+                        merchant.getId())
                 .isPresent()) {
             return ResponseEntity
                     .badRequest()
@@ -68,7 +80,8 @@ public class ProductControllerImpl implements ProductController {
                     );
         }
 
-        Product product = makeProduct(addProductRequest);
+        Product product = makeProduct(addProductRequest, merchant.getId());
+        System.out.println(product);
         productRepository.save(product);
 
         return ResponseEntity.ok(new MessageResponseDTO("Product added successfully!"));
@@ -77,21 +90,17 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @PostMapping("/edit-product")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> editProduct(EditProductRequestDTO editProductRequest) {
+    public ResponseEntity<?> editProduct(@Valid @RequestBody EditProductRequestDTO editProductRequest) {
 
-        Authentication authentication = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = getUserDetails();
 
-        userDetails.getId();
+        Merchant merchant = merchantRepository.findByUserId(userDetails.getId());
 
         Product product = productRepository
                 .findById(editProductRequest.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        if (!product.getMerchantId().equals(editProductRequest.getProductInfo().getUserId())) {
+        if (!product.getMerchantId().equals(merchant.getId())) {
             return ResponseEntity
                     .badRequest()
                     .body(
@@ -99,7 +108,7 @@ public class ProductControllerImpl implements ProductController {
                     );
         }
 
-        Product editedProduct = makeProduct(editProductRequest.getProductInfo());
+        Product editedProduct = makeProduct(editProductRequest.getProductInfo(), merchant.getId());
         editedProduct.setId(editProductRequest.getProductId());
         productRepository.save(editedProduct);
 
@@ -107,20 +116,17 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    @GetMapping("/get-products")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> getProducts(GetProductsRequestDTO getProductsRequest) {
+    @PostMapping("/get-products")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER', 'ADMIN', 'MERCHANT')")
+    public ResponseEntity<List<?>> getProducts(@Valid @RequestBody GetProductsRequestDTO getProductsRequest) {
 
-        List<Product> products = productRepository
-                .findAllByMerchantId(getProductsRequest.getUserId());
+        Optional<Merchant> merchant = merchantRepository.findById(getProductsRequest.getMerchant_id());
 
         return ResponseEntity.ok(
-                new GetProductsResponseDTO(
-                        products.stream()
+                        merchant.get().getProducts().stream()
                                 .map(this::convertToDto)
                                 .collect(Collectors.toList())
-        ));
-
+                );
     }
 
     @Override
@@ -136,14 +142,27 @@ public class ProductControllerImpl implements ProductController {
 //        return new Product(merchantId, name, price);
 //    }
 
-    private Product makeProduct(AddProductRequestDTO request) {
-        return new Product(request.getUserId()
+    private Product makeProduct(AddProductRequestDTO request, Long merchantId) {
+        return new Product(merchantId
                 , request.getName()
                 , request.getPrice());
     }
 
     private ProductResponseDTO convertToDto(Product product) {
-        ProductResponseDTO productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
-        return productResponseDTO;
+//        ProductResponseDTO productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
+//        return productResponseDTO;
+        ProductResponseDTO response = new ProductResponseDTO(product.getId()
+                , product.getMerchantId(), product.getName(), product.getPrice());
+        return response;
+    }
+
+    private UserDetailsImpl getUserDetails() {
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) authentication.getPrincipal();
+
+        return userDetails;
     }
 }

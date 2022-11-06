@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetProductsRequestDTO {
 
-    private Long userId;
+    private Long merchant_id;
 
 }
