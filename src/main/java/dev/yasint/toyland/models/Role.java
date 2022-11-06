@@ -1,25 +1,27 @@
 package dev.yasint.toyland.models;
 
+import dev.yasint.toyland.models.enumerations.ERole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
+@Table(name = "roles")
 @NoArgsConstructor
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String name;
+    private Integer id;
 
-    public Role(String name) {
-        this.name = name;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+
+    public Role(ERole role) {
+        this.name = role;
     }
 
 }

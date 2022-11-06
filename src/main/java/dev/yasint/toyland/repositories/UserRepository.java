@@ -1,12 +1,16 @@
 package dev.yasint.toyland.repositories;
 
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.BasicUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
-    User findByEmail(String email);
+@Repository
+public interface UserRepository extends JpaRepository<BasicUser, Long> {
+
+    Optional<BasicUser> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
 
 }
