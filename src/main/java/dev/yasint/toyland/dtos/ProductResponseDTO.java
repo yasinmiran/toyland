@@ -1,6 +1,5 @@
 package dev.yasint.toyland.dtos;
 
-import dev.yasint.toyland.models.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

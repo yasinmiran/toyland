@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +68,6 @@ public class ProductControllerImpl implements ProductController {
 
         Merchant merchant = merchantRepository.findByUserId(userDetails.getId());
 
-        System.out.println(addProductRequest);
         if (productRepository.
                 findByNameAndPriceAndMerchantId(addProductRequest.getName(),
                         addProductRequest.getPrice(),
@@ -81,7 +81,6 @@ public class ProductControllerImpl implements ProductController {
         }
 
         Product product = makeProduct(addProductRequest, merchant.getId());
-        System.out.println(product);
         productRepository.save(product);
 
         return ResponseEntity.ok(new MessageResponseDTO("Product added successfully!"));
@@ -120,12 +119,15 @@ public class ProductControllerImpl implements ProductController {
     @PreAuthorize("hasAnyAuthority('CUSTOMER', 'ADMIN', 'MERCHANT')")
     public ResponseEntity<List<?>> getProducts(@Valid @RequestBody GetProductsRequestDTO getProductsRequest) {
 
-        Optional<Merchant> merchant = merchantRepository.findById(getProductsRequest.getMerchant_id());
+        Optional<Merchant> merchant = merchantRepository.findById(getProductsRequest.getMerchantId());
 
         return ResponseEntity.ok(
-                        merchant.get().getProducts().stream()
+                        merchant.isPresent() ?
+                                merchant.get().getProducts().stream()
                                 .map(this::convertToDto)
                                 .collect(Collectors.toList())
+                                :
+                                new ArrayList<>()
                 );
     }
 
@@ -151,18 +153,15 @@ public class ProductControllerImpl implements ProductController {
     private ProductResponseDTO convertToDto(Product product) {
 //        ProductResponseDTO productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
 //        return productResponseDTO;
-        ProductResponseDTO response = new ProductResponseDTO(product.getId()
+        return new ProductResponseDTO(product.getId()
                 , product.getMerchantId(), product.getName(), product.getPrice());
-        return response;
     }
 
     private UserDetailsImpl getUserDetails() {
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) authentication.getPrincipal();
 
-        return userDetails;
+        return (UserDetailsImpl) authentication.getPrincipal();
     }
 }
