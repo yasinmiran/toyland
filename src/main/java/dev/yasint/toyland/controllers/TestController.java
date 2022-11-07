@@ -16,7 +16,7 @@ public class TestController {
 
     @GetMapping("/public-content")
     public String publicContent() {
-        return "Public Content.";
+        return "Public Content. Updated.";
     }
 
     @GetMapping("/all-authenticated-user-content")
