@@ -1,14 +1,14 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.dtos.LoginRequestDTO;
-import dev.yasint.toyland.dtos.SignupRequestDTO;
+import dev.yasint.toyland.dtos.request.UserSignupReqDTO;
+import dev.yasint.toyland.dtos.request.LoginReqDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthController {
 
-    ResponseEntity<?> login(LoginRequestDTO loginRequestDTO);
+    ResponseEntity<?> login(LoginReqDTO body);
 
-    ResponseEntity<?> register(SignupRequestDTO signupRequestDTO);
+    ResponseEntity<?> register(UserSignupReqDTO body);
 
     ResponseEntity<?> logout();
 

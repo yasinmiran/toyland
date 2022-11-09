@@ -1,9 +1,8 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.services.UserDetailsImpl;
+import dev.yasint.toyland.utils.Common;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,12 +39,8 @@ public class TestController {
     @GetMapping("/authenticated-user-details")
     @PreAuthorize("hasAnyAuthority('CUSTOMER', 'DRIVER', 'ADMIN', 'MERCHANT')")
     public String authenticatedUserDetails() {
-        Authentication authentication = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) authentication.getPrincipal();
-        return userDetails.getEmail();
+        UserDetails userDetails = Common.getUserDetailsFromContext();
+        return userDetails.getUsername();
     }
 
 }

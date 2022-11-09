@@ -6,14 +6,28 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@Entity
+@Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Driver {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(
+            name = "fk_merchant_id",
+            referencedColumnName = "id"
+    )
+    private Merchant merchant;
+
+    private String name;
+
+    private double price;
+
+    private int quantity;
 
 }
