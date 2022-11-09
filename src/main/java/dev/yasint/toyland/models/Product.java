@@ -30,4 +30,9 @@ public class Product {
 
     private int quantity;
 
+    public Product(Merchant merchant, String name, double price) {
+        this.merchant = merchant;
+        this.name = name;
+        this.price = price;
+    }
 }
