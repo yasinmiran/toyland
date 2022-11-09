@@ -2,8 +2,8 @@ package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.exceptions.UserExistsException;
-import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.Role;
+import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.ERole;
 
 import java.util.List;

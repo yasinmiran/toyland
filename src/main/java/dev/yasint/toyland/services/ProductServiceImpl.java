@@ -1,7 +1,9 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ResourceAccessException;
+import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.Product;
+import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
 import dev.yasint.toyland.repositories.UserRepository;
@@ -36,6 +38,11 @@ public class ProductServiceImpl implements ProductService {
         return Objects.equals(product.getMerchant().getUser().getId(), userId);
     }
 
-
+    @Override
+    public Product saveProduct(User owner, Product partial) {
+        Merchant merchant = merchantRepository.findMerchantByUser(owner);
+        partial.setMerchant(merchant);
+        return productRepository.save(partial);
+    }
 
 }
