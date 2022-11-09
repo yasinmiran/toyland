@@ -1,6 +1,9 @@
 package dev.yasint.toyland.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.yasint.toyland.constants.Validation;
+import dev.yasint.toyland.dtos.Transformable;
+import dev.yasint.toyland.models.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +14,9 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductAddDTO {
+public class ProductDTO implements Transformable<Product> {
 
+    @JsonProperty
     @NotBlank
     @Size(
             min = Validation.MIN_PRODUCT_NAME_LENGTH,
@@ -20,10 +24,19 @@ public class ProductAddDTO {
     )
     private String name;
 
-    @NotBlank
+    @JsonProperty
     private double price;
 
-    @NotBlank
+    @JsonProperty
     private int quantity;
+
+    @Override
+    public Product transform() {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        return product;
+    }
 
 }

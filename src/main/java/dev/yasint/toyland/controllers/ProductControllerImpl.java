@@ -1,8 +1,14 @@
 package dev.yasint.toyland.controllers;
 
+import dev.yasint.toyland.dtos.request.ProductDTO;
 import dev.yasint.toyland.models.Product;
+import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.services.ProductService;
+import dev.yasint.toyland.utils.Common;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -11,15 +17,18 @@ import javax.validation.Valid;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/product")
+@RequiredArgsConstructor
 public class ProductControllerImpl implements ProductController {
 
+    private final ProductService productService;
+
     @Override
-    @PostMapping("/")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product) {
-
-
-
-        return null;
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO body) {
+        User user = Common.getUserDetailsFromContext().getUser();
+        Product product = productService.saveProduct(user, body.transform());
+        return ResponseEntity.ok().body(product);
     }
 
     @Override
@@ -29,13 +38,13 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getProducts() {
         return null;
     }
 
     @Override
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<?> editProduct(@Valid @RequestBody Product product) {
         return null;
     }
