@@ -11,6 +11,12 @@ import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
 import dev.yasint.toyland.services.UserDetailsImpl;
+import dev.yasint.toyland.dtos.request.ProductDTO;
+import dev.yasint.toyland.models.Product;
+import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.services.ProductService;
+import dev.yasint.toyland.utils.Common;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +33,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/product")
+@RequiredArgsConstructor
 public class ProductControllerImpl implements ProductController {
 
     @Autowired
@@ -36,6 +43,17 @@ public class ProductControllerImpl implements ProductController {
     private MerchantRepository merchantRepository;
 
 //    private ModelMapper modelMapper = new ModelMapper();
+
+    private final ProductService productService;
+
+    @Override
+    @PostMapping("/add-product")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO body) {
+        User user = Common.getUserDetailsFromContext().getUser();
+        Product product = productService.saveProduct(user, body.transform());
+        return ResponseEntity.ok().body(product);
+    }
 
     @Override
     @PostMapping("/delete-product")
@@ -66,33 +84,33 @@ public class ProductControllerImpl implements ProductController {
         return ResponseEntity.ok(new MessageResDTO("Product deleted successfully!"));
     }
 
-    @Override
-    @PostMapping("/add-product")
-    @PreAuthorize("hasAuthority('MERCHANT')")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody AddProductRequestDTO addProductRequest) {
-
-        UserDetailsImpl userDetails = getUserDetails();
-
-        Merchant merchant = merchantRepository
-                .findByUserId(userDetails.getId())
-                .orElseThrow(() -> new RuntimeException("Merchant not found"));
-
-        if (productRepository.
-                findByNameAndMerchantId(addProductRequest.getName(),
-                        merchant.getId())
-                .isPresent()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(
-                            new MessageResDTO("Merchant already has a product with the same details")
-                    );
-        }
-
-        Product product = makeProduct(addProductRequest, merchant);
-        productRepository.save(product);
-
-        return ResponseEntity.ok(new MessageResDTO("Product added successfully!"));
-    }
+//    @Override
+//    @PostMapping("/add-product")
+//    @PreAuthorize("hasAuthority('MERCHANT')")
+//    public ResponseEntity<?> addProduct(@Valid @RequestBody AddProductRequestDTO addProductRequest) {
+//
+//        UserDetailsImpl userDetails = getUserDetails();
+//
+//        Merchant merchant = merchantRepository
+//                .findByUserId(userDetails.getId())
+//                .orElseThrow(() -> new RuntimeException("Merchant not found"));
+//
+//        if (productRepository.
+//                findByNameAndMerchantId(addProductRequest.getName(),
+//                        merchant.getId())
+//                .isPresent()) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(
+//                            new MessageResDTO("Merchant already has a product with the same details")
+//                    );
+//        }
+//
+//        Product product = makeProduct(addProductRequest, merchant);
+//        productRepository.save(product);
+//
+//        return ResponseEntity.ok(new MessageResDTO("Product added successfully!"));
+//    }
 
     @Override
     @PostMapping("/edit-product")
