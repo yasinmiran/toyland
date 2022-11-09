@@ -14,7 +14,11 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+<<<<<<<< HEAD:src/main/java/dev/yasint/toyland/dtos/request/AddProductRequestDTO.java
+public class AddProductRequestDTO {
+========
 public class ProductDTO implements Transformable<Product> {
+>>>>>>>> 8984ad8 (feat(product): add product route (#10)):src/main/java/dev/yasint/toyland/dtos/request/ProductDTO.java
 
     @JsonProperty
     @NotBlank

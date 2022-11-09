@@ -1,25 +1,20 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.dtos.request.AddProductRequestDTO;
-import dev.yasint.toyland.dtos.request.DeleteProductRequestDTO;
-import dev.yasint.toyland.dtos.request.EditProductRequestDTO;
-import dev.yasint.toyland.dtos.request.GetProductsRequestDTO;
 import dev.yasint.toyland.dtos.request.ProductDTO;
+import dev.yasint.toyland.models.Product;
 import org.springframework.http.ResponseEntity;
 
 public interface ProductController {
 
     ResponseEntity<?> addProduct(ProductDTO product);
 
+    ResponseEntity<?> getProductDetails(Long productId);
 
-    ResponseEntity<?> deleteProduct(DeleteProductRequestDTO deleteProductRequestDTO);
+    ResponseEntity<?> getProducts();
 
-//    ResponseEntity<?> addProduct(AddProductRequestDTO addProductRequestDTO);
+    ResponseEntity<?> editProduct(Product product);
 
-    ResponseEntity<?> editProduct(EditProductRequestDTO editProductRequestDTO);
+    ResponseEntity<?> deleteProduct(Long productId);
 
-    ResponseEntity<?> getProducts(GetProductsRequestDTO getProductsRequestDTO);
-
-    ResponseEntity<?> viewOrders();
 
 }
