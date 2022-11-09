@@ -1,13 +1,18 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.dtos.*;
-import dev.yasint.toyland.models.BasicUser;
+import dev.yasint.toyland.dtos.request.LoginReqDTO;
+import dev.yasint.toyland.dtos.request.UserSignupReqDTO;
+import dev.yasint.toyland.dtos.response.LoginResDTO;
+import dev.yasint.toyland.dtos.response.MessageResDTO;
+import dev.yasint.toyland.dtos.response.UserInfoResDTO;
+import dev.yasint.toyland.exceptions.UnableToSatisfyException;
+import dev.yasint.toyland.exceptions.UserExistsException;
+import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.ERole;
-import dev.yasint.toyland.models.Role;
-import dev.yasint.toyland.repositories.RoleRepository;
-import dev.yasint.toyland.repositories.UserRepository;
 import dev.yasint.toyland.services.UserDetailsImpl;
+import dev.yasint.toyland.services.UserService;
 import dev.yasint.toyland.utils.JWTUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -21,10 +26,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -33,21 +38,19 @@ public class AuthControllerImpl implements AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    private UserService userService;
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
     private JWTUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginReqDTO body) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
+                        body.getUsername(),
+                        body.getPassword()
                 )
         );
 
@@ -62,9 +65,9 @@ public class AuthControllerImpl implements AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(
-                        new LoginResponseDTO(
+                        new LoginResDTO(
                                 jwtCookie.getValue(),
-                                new UserInfoResponseDTO(
+                                new UserInfoResDTO(
                                         userDetails.getId(),
                                         userDetails.getEmail(),
                                         roles
@@ -75,34 +78,36 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody SignupRequestDTO signUpRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserSignupReqDTO body) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        ERole eRole = body.isMerchant()
+                ? ERole.MERCHANT
+                : ERole.CUSTOMER;
+
+        log.info("{} register request", eRole);
+
+        try {
+
+            userService.checkUserExistence(body.getUsername());
+
+            final User user = new User(
+                    body.getUsername(),
+                    encoder.encode(body.getPassword())
+            );
+
+            userService.createAndSaveUser(user, eRole);
+
+        } catch (UserExistsException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(
-                            new MessageResponseDTO("Error: Email is already in use!")
-                    );
-        }
-
-        final BasicUser basicUser = new BasicUser(
-                signUpRequest.getUsername(),
-                encoder.encode(signUpRequest.getPassword())
-        );
-
-        Role userRole = roleRepository
-                .findByName(ERole.CUSTOMER)
-                .orElseThrow(() -> new RuntimeException(ERole.CUSTOMER + " not found!"));
-
-        if (userRole == null) {
+                    .body(new MessageResDTO(e.getMessage()));
+        } catch (UnableToSatisfyException e) {
             return ResponseEntity
                     .internalServerError()
-                    .body(new MessageResponseDTO("cannot register at this time"));
+                    .body(new MessageResDTO(e.getMessage()));
         }
 
-        basicUser.setRoles(new HashSet<>(List.of(userRole)));
-        userRepository.save(basicUser);
-        return ResponseEntity.ok(new MessageResponseDTO("user registered successfully!"));
+        return ResponseEntity.ok(new MessageResDTO(eRole.name() + " user registered successfully!"));
 
     }
 
@@ -112,7 +117,7 @@ public class AuthControllerImpl implements AuthController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new MessageResponseDTO("You've been signed out!"));
+                .body(new MessageResDTO("You've been signed out!"));
     }
 
 }

@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -18,22 +16,12 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "fk_user_id")
+    private User user;
 
-    @Size(max = 32)
-    private String mobileNo;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_addresses",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "location_id"))
-    private Location address;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_payments",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "payment_id"))
-    private Payment payment;
+    @OneToOne
+    @JoinColumn(name = "fk_user_contact_id", referencedColumnName = "id")
+    private Contact contact;
 
 }

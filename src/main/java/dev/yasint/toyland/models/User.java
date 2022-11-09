@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,28 +18,30 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username")
         }
 )
-public class BasicUser {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email
+    /**
+     * {@code username} is essentially the email address of the
+     * user. We want this to be unique hence, {@code uniqueConstraints}
+     * were added as a DDL pre-validation. See @Table annotation.
+     */
     private String username;
 
-    @NotBlank
-    @Size(max = 120)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_roles",
+    @JoinTable(
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles = new HashSet<>();
 
-    public BasicUser(String username, String password) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
     }

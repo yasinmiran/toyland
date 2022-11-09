@@ -1,5 +1,6 @@
-package dev.yasint.toyland.dtos;
+package dev.yasint.toyland.dtos.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageResponseDTO {
+public class MessageResDTO {
 
+    @JsonProperty
     private String message;
 
 }
