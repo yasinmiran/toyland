@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -30,6 +31,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
     public boolean isProductOwnedByMerchant(
             Long productId,
             Long userId
@@ -43,6 +49,15 @@ public class ProductServiceImpl implements ProductService {
         Merchant merchant = merchantRepository.findMerchantByUser(owner);
         partial.setMerchant(merchant);
         return productRepository.save(partial);
+    }
+
+    @Override
+    public List<Product> saveAllProducts(User owner, List<Product> products) {
+        Merchant merchant = merchantRepository.findMerchantByUser(owner);
+        products.forEach(product -> {
+            product.setMerchant(merchant);
+        });
+        return productRepository.saveAll(products);
     }
 
 }
