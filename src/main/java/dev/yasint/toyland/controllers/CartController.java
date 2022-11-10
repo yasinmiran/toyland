@@ -1,6 +1,6 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.dtos.CartAddDTO;
+import dev.yasint.toyland.dtos.request.CartAddDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface CartController {

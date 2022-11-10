@@ -1,6 +1,6 @@
 package dev.yasint.toyland.controllers;
 
-import dev.yasint.toyland.dtos.CartAddDTO;
+import dev.yasint.toyland.dtos.request.CartAddDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;

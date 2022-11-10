@@ -70,7 +70,7 @@ public class Bootstrapper {
                 Merchant merchant = new Merchant();
                 Contact contact = Contact
                         .builder()
-                        .addressLine1("420 Maine Street")
+                        .addressLine1("42 Maine Street")
                         .county("Dublin")
                         .country("Ireland")
                         .postcode("VP54K0")

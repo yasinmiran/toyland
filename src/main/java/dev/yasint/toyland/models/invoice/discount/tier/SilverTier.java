@@ -11,7 +11,7 @@ public class SilverTier extends TierDiscountDecorator {
     @Override
     public double getTotalDiscount() {
         double amount = tempDiscount.getTotalDiscount();
-        return amount - (amount * (8.0 / 100.0));
+        return amount - (amount * (5.0 / 100.0));
 
     }
 }
