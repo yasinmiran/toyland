@@ -1,10 +1,10 @@
 package dev.yasint.toyland.repositories;
 
-import dev.yasint.toyland.models.Contact;
+import dev.yasint.toyland.models.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ContactRepository extends JpaRepository<Contact, Long> {
+public interface CartItemRepository extends JpaRepository<Cart.CartItem, Long> {
 
 }

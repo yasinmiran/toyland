@@ -6,6 +6,7 @@ import dev.yasint.toyland.models.Cart;
 import dev.yasint.toyland.models.Customer;
 import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.repositories.CartItemRepository;
 import dev.yasint.toyland.repositories.CartRepository;
 import dev.yasint.toyland.repositories.CustomerRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
@@ -15,9 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -28,6 +28,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public Cart getCart() {
@@ -63,9 +64,18 @@ public class CartServiceImpl implements CartService {
 
         List<Cart.CartItem> items = cart.getItems();
 
-        items.removeIf(item -> item.getProductId().equals(productId));
+        Set<Long> removedCartItemIds = new HashSet<>();
+
+        items.removeIf(item -> {
+            if (item.getProductId().equals(productId)) {
+                removedCartItemIds.add(item.getId());
+                return true;
+            }
+            return false;
+        });
 
         // FIXME: remove the stale items from table
+        cartItemRepository.deleteAllById(removedCartItemIds);
 
         Cart.CartItem cartItem = new Cart.CartItem();
         cartItem.setProductId(productId);
@@ -89,7 +99,19 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCart();
 
         List<Cart.CartItem> items = cart.getItems();
-        items.removeIf(item -> Objects.equals(item.getProductId(), productId));
+        AtomicReference<Cart.CartItem> remove = new AtomicReference<>();
+
+        items.removeIf(item -> {
+            if (Objects.equals(item.getProductId(), productId)) {
+                remove.set(item);
+                return true;
+            }
+            return false;
+        });
+
+        if (remove.get() != null)
+            cartItemRepository.deleteById(remove.get().getId());
+
         cart.setItems(List.copyOf(items));
 
         return cartRepository.save(cart);
