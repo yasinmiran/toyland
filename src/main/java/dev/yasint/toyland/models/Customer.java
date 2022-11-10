@@ -1,5 +1,6 @@
 package dev.yasint.toyland.models;
 
+import dev.yasint.toyland.models.enumerations.ECustomerTier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,18 @@ public class Customer {
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "fk_user_contact_id", referencedColumnName = "id")
+    @JoinColumn(
+            name = "fk_user_contact_id",
+            referencedColumnName = "id")
     private Contact contact;
+
+    @OneToOne
+    @JoinColumn(
+            name = "fk_user_cart_id",
+            referencedColumnName = "id")
+    private Cart cart;
+
+    @Enumerated(EnumType.STRING)
+    private ECustomerTier tier;
 
 }

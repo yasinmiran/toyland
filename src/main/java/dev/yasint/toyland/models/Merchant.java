@@ -40,4 +40,8 @@ public class Merchant {
     )
     private List<Product> product = new ArrayList<>();
 
+    private Boolean verified = false;
+
+    private String taxId = null;
+
 }

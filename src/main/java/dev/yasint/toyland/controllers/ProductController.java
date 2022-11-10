@@ -4,9 +4,13 @@ import dev.yasint.toyland.dtos.request.ProductDTO;
 import dev.yasint.toyland.models.Product;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface ProductController {
 
     ResponseEntity<?> addProduct(ProductDTO product);
+
+    ResponseEntity<?> addAllProducts(List<ProductDTO> product);
 
     ResponseEntity<?> getProductDetails(Long productId);
 
