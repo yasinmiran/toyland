@@ -4,9 +4,7 @@ import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.EVerificationStatus;
-import dev.yasint.toyland.models.verification.CreatedVerificationCommand;
-import dev.yasint.toyland.models.verification.Verification;
-import dev.yasint.toyland.models.verification.VerificationCommand;
+import dev.yasint.toyland.models.verification.*;
 import dev.yasint.toyland.repositories.VerificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +30,11 @@ public class VerificationServiceImpl implements VerificationService {
         return verification;
     }
 
+    // -----------------
+    // STATUS        > APPROVE,
+    //               > IN_PROGRESS
+    // -----------------
+
     @Override
     public Verification updateStatus(
             Long verificationId,
@@ -43,8 +46,13 @@ public class VerificationServiceImpl implements VerificationService {
                 .orElseThrow(ResourceNotFoundException::new);
         verification.setModifiedAt(LocalDateTime.now());
         verification.setAuthority(authority);
-        verification.setStatus(status);
-        return verification;
+        switch (status) {
+            case CREATED -> new CreatedVerificationCommand(verification).execute();
+            case IN_PROGRESS -> new InProgressVerificationCommand(verification).execute();
+            case APPROVED -> new ApprovedVerificationCommand(verification).execute();
+            case DENIED -> new DeniedVerificationCommand(verification).execute();
+        }
+        return verificationRepository.save(verification);
     }
 
     @Override

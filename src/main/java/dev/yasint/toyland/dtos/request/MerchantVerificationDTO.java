@@ -1,4 +1,4 @@
-package dev.yasint.toyland.dtos;
+package dev.yasint.toyland.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

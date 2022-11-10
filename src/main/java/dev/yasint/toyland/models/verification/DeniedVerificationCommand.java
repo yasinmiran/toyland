@@ -11,7 +11,7 @@ public class DeniedVerificationCommand extends VerificationCommand {
     @Override
     public boolean execute() {
         this.backupPreviousStatus();
-        this.verification.setStatus(EVerificationStatus.APPROVED);
+        this.verification.setStatus(EVerificationStatus.DENIED);
         return true;
     }
 
