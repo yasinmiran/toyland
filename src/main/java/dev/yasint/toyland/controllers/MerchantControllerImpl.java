@@ -4,7 +4,7 @@ import dev.yasint.toyland.dtos.MerchantVerificationDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.User;
-import dev.yasint.toyland.models.Verification;
+import dev.yasint.toyland.models.verification.Verification;
 import dev.yasint.toyland.services.MerchantService;
 import dev.yasint.toyland.utils.Common;
 import lombok.RequiredArgsConstructor;

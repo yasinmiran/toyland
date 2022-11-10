@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -50,10 +49,6 @@ public class Cart {
         private Long productId;
 
         private Integer quantity;
-
-    }
-
-    public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     }
 

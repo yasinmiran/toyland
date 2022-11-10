@@ -3,8 +3,10 @@ package dev.yasint.toyland.services;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.User;
-import dev.yasint.toyland.models.Verification;
 import dev.yasint.toyland.models.enumerations.EVerificationStatus;
+import dev.yasint.toyland.models.verification.CreatedVerificationCommand;
+import dev.yasint.toyland.models.verification.Verification;
+import dev.yasint.toyland.models.verification.VerificationCommand;
 import dev.yasint.toyland.repositories.VerificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,8 @@ public class VerificationServiceImpl implements VerificationService {
         Verification verification = new Verification();
         verification.setMerchant(merchant);
         verification.setCreatedAt(LocalDateTime.now());
-        verification.setStatus(EVerificationStatus.CREATED);
+        VerificationCommand command = new CreatedVerificationCommand(verification);
+        command.execute();
         verificationRepository.save(verification);
         return verification;
     }
@@ -46,8 +49,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public boolean canRequestVerification(Merchant merchant) {
-        Verification verification = verificationRepository
-                .findVerificationByMerchant(merchant);
+        Verification verification = verificationRepository.findVerificationByMerchant(merchant);
         return verification == null;
     }
 

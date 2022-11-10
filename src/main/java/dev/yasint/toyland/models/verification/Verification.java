@@ -1,6 +1,8 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.verification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.yasint.toyland.models.Merchant;
+import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.EVerificationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
