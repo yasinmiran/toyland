@@ -6,7 +6,6 @@ import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
-import dev.yasint.toyland.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.Objects;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
     private final MerchantRepository merchantRepository;
 
     @Override
