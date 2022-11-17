@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductAddDTO {
+public class AddProductRequestDTO {
 
     @NotBlank
     @Size(

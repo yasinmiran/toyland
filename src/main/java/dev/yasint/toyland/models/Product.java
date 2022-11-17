@@ -1,5 +1,6 @@
 package dev.yasint.toyland.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Product {
             name = "fk_merchant_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     private Merchant merchant;
 
     private String name;
@@ -30,4 +32,9 @@ public class Product {
 
     private int quantity;
 
+    public Product(Merchant merchant, String name, double price) {
+        this.merchant = merchant;
+        this.name = name;
+        this.price = price;
+    }
 }
