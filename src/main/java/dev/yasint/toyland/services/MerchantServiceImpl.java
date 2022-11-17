@@ -49,12 +49,14 @@ public class MerchantServiceImpl implements MerchantService {
             Merchant merchant = merchantRepository
                     .findById(merchantId)
                     .orElseThrow(RuntimeException::new);
-            Verification verfication = verificationRepository.findVerificationByMerchant(merchant);
-            Verification updated = verificationService.updateStatus(verfication.getId(), status, user);
+
+            Verification verification = verificationRepository.findVerificationByMerchant(merchant);
+            Verification updated = verificationService.updateStatus(verification.getId(), status, user);
+
             if (updated.getStatus() == status) {
-                log.info("Successfully updated the verfication status.");
+                log.info("Successfully updated the verification status.");
             } else {
-                log.info("Unable to update the verfication status");
+                log.info("Unable to update the verification status");
             }
             return updated;
         }

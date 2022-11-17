@@ -15,7 +15,6 @@ public class SpringFoxConfig {
                 .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("dev.yasint.toyland.controllers")).build();
-
     }
 
 }
