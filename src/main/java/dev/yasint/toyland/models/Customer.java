@@ -21,11 +21,17 @@ public class Customer {
     @JoinColumn(name = "fk_user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(
             name = "fk_user_contact_id",
             referencedColumnName = "id")
     private Contact contact;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(
+            name = "fk_payment_details_id",
+            referencedColumnName = "id")
+    private Payment payment;
 
     @OneToOne
     @JoinColumn(

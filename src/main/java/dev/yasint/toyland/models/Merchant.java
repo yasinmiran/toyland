@@ -25,7 +25,7 @@ public class Merchant {
     )
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(
             name = "fk_merchant_contact_id",
             referencedColumnName = "id"

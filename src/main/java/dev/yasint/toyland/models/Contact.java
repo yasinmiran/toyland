@@ -1,13 +1,13 @@
 package dev.yasint.toyland.models;
 
 import dev.yasint.toyland.constants.Validation;
+import dev.yasint.toyland.models.contracts.Completable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -16,33 +16,37 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Table(name = "contacts")
 @Builder
-public class Contact {
+public class Contact implements Completable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String addressLine1;
 
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String addressLine2;
 
-    @NotBlank
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String county;
 
-    @NotBlank
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String country;
 
-    @NotBlank
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String postcode;
 
-    @NotBlank
     @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String mobileNo;
+
+    @Override
+    public boolean isCompleted() {
+        return (addressLine1 != null && !addressLine1.isBlank())
+                && (country != null && !country.isBlank())
+                && (country != null && !country.isBlank())
+                && (postcode != null && !postcode.isBlank())
+                && (mobileNo != null && !mobileNo.isBlank() && mobileNo.startsWith("+"));
+    }
 
 }

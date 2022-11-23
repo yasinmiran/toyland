@@ -43,6 +43,7 @@ public class Bootstrapper {
             @Autowired CustomerRepository customerRepository,
             @Autowired MerchantRepository merchantRepository,
             @Autowired ContactRepository contactRepository,
+            @Autowired PaymentRepository paymentRepository,
             @Autowired PasswordEncoder encoder
     ) {
         return (String... args) -> {
@@ -84,18 +85,30 @@ public class Bootstrapper {
             }
 
             if (!userRepository.existsByUsername("customer@toyland.com")) {
-                User merchant = new User(
+
+                User customer = new User(
                         "customer@toyland.com",
                         encoder.encode("customer123")
                 );
                 Role role = roleRepository
                         .findByName(ERole.CUSTOMER)
                         .orElseThrow(() -> new RuntimeException(ERole.CUSTOMER + " role not found!"));
-                merchant.setRoles(new HashSet<>(List.of(role)));
-                userRepository.save(merchant);
+                customer.setRoles(new HashSet<>(List.of(role)));
+                userRepository.save(customer);
+
                 Customer association = new Customer();
-                association.setUser(merchant);
+                association.setUser(customer);
                 customerRepository.save(association);
+
+                Contact c = Contact.builder().build();
+                contactRepository.save(c);
+                Payment p = Payment.builder().build();
+                paymentRepository.save(p);
+
+                association.setContact(c);
+                association.setPayment(p);
+                contactRepository.save(c);
+
             }
         };
     }

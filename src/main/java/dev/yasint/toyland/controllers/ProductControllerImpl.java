@@ -48,6 +48,12 @@ public class ProductControllerImpl implements ProductController {
         return ResponseEntity.ok().body(savedProducts);
     }
 
+    /**
+     * This is a public route. See next endpoint.
+     *
+     * @param productId {Long}
+     * @return {ResponseEntity}
+     */
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductDetails(@PathVariable("id") Long productId) {
@@ -59,6 +65,15 @@ public class ProductControllerImpl implements ProductController {
         }
     }
 
+
+    /**
+     * This is a public route. We use this endpoint to
+     * list the products in the landing page of the application.
+     * Hence, no point in adding pre-authorization checks
+     * for this route.
+     *
+     * @return ResponseEntity
+     */
     @Override
     @GetMapping
     public ResponseEntity<?> getProducts() {

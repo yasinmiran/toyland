@@ -1,5 +1,6 @@
 package dev.yasint.toyland.services;
 
+import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
@@ -75,6 +76,7 @@ public class CartServiceImpl implements CartService {
         });
 
         // FIXME: remove the stale items from table
+        // TODO(yasinmiran):
         cartItemRepository.deleteAllById(removedCartItemIds);
 
         Cart.CartItem cartItem = new Cart.CartItem();
@@ -129,6 +131,28 @@ public class CartServiceImpl implements CartService {
         cart.setItems(new ArrayList<>());
 
         return cartRepository.save(cart);
+
+    }
+
+    @Override
+    public void checkout() throws ProfileInCompleteException {
+
+        // Check whether the user profile is completed
+
+        User user = Common.getUserDetailsFromContext().getUser();
+        Customer customer = customerRepository.findCustomerByUser(user);
+
+        if (!customer.getContact().isCompleted()) {
+            throw new ProfileInCompleteException(
+                    "Please fill in contact details to proceed."
+            );
+        }
+
+        if (!customer.getPayment().isCompleted()) {
+            throw new ProfileInCompleteException(
+                    "Please add your payment details to checkout."
+            );
+        }
 
     }
 
