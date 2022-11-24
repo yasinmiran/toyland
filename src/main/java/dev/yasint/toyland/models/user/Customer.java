@@ -1,5 +1,6 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
+import dev.yasint.toyland.models.Cart;
 import dev.yasint.toyland.models.enumerations.ECustomerTier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +9,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Customer {
 
     @Id
@@ -18,19 +19,24 @@ public class Customer {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "fk_user_id")
+    @JoinColumn(
+            name = "fk_user_id",
+            referencedColumnName = "id"
+    )
     private User user;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(
-            name = "fk_user_contact_id",
-            referencedColumnName = "id")
+            name = "fk_contact_id",
+            referencedColumnName = "id"
+    )
     private Contact contact;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(
-            name = "fk_payment_details_id",
-            referencedColumnName = "id")
+            name = "fk_payment_detail_id",
+            referencedColumnName = "id"
+    )
     private Payment payment;
 
     @OneToOne

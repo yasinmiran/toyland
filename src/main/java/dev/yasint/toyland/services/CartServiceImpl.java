@@ -4,13 +4,10 @@ import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
-import dev.yasint.toyland.models.Customer;
+import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.User;
-import dev.yasint.toyland.repositories.CartItemRepository;
-import dev.yasint.toyland.repositories.CartRepository;
-import dev.yasint.toyland.repositories.CustomerRepository;
-import dev.yasint.toyland.repositories.ProductRepository;
+import dev.yasint.toyland.models.user.User;
+import dev.yasint.toyland.repositories.*;
 import dev.yasint.toyland.utils.Common;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +27,8 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final CartItemRepository cartItemRepository;
+    private final ContactRepository contactRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public Cart getCart() {
@@ -153,6 +152,10 @@ public class CartServiceImpl implements CartService {
                     "Please add your payment details to checkout."
             );
         }
+
+        // If everything is in place then create an order.
+
+
 
     }
 

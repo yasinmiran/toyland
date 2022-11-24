@@ -1,6 +1,5 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
-import dev.yasint.toyland.constants.Validation;
 import dev.yasint.toyland.models.contracts.Completable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -22,22 +20,11 @@ public class Contact implements Completable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String addressLine1;
-
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String addressLine2;
-
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String county;
-
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String country;
-
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String postcode;
-
-    @Size(max = Validation.MAX_GENERIC_STRING_LENGTH)
     private String mobileNo;
 
     @Override

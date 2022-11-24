@@ -1,7 +1,9 @@
 package dev.yasint.toyland.configs;
 
-import dev.yasint.toyland.models.*;
+import dev.yasint.toyland.models.Role;
+import dev.yasint.toyland.models.enumerations.ECustomerTier;
 import dev.yasint.toyland.models.enumerations.ERole;
+import dev.yasint.toyland.models.user.*;
 import dev.yasint.toyland.repositories.*;
 import dev.yasint.toyland.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,16 +36,85 @@ public class Bootstrapper {
         };
     }
 
+    @Bean("create_customers")
+    @Transactional
+    @DependsOn("create_roles")
+    CommandLineRunner createDummyCustomers(
+            @Autowired final UserRepository userRepository,
+            @Autowired final CustomerRepository customerRepository,
+            @Autowired final RoleRepository roleRepository,
+            @Autowired final ContactRepository contactRepository,
+            @Autowired final PaymentRepository paymentRepository,
+            @Autowired final PasswordEncoder encoder
+    ) {
+        return (args) -> {
+            if (!userRepository.existsByUsername("customer@toyland.com")) {
+                User user = new User(
+                        "customer@toyland.com",
+                        encoder.encode("customer123")
+                );
+                Role role = roleRepository
+                        .findByName(ERole.CUSTOMER)
+                        .orElseThrow(RuntimeException::new);
+                user.setRoles(new HashSet<>(List.of(role)));
+                Contact contact = new Contact();
+                Payment payment = new Payment();
+                Customer customer = new Customer();
+                customer.setUser(user);
+                customer.setContact(contact);
+                customer.setPayment(payment);
+                customer.setTier(ECustomerTier.NONE);
+                userRepository.save(user);
+                paymentRepository.save(payment);
+                contactRepository.save(contact);
+                customerRepository.save(customer);
+            }
+        };
+    }
+
+    @Bean("create_merchants")
+    @Transactional
+    @DependsOn("create_roles")
+    CommandLineRunner createDummyMerchants(
+            @Autowired final UserRepository userRepository,
+            @Autowired final MerchantRepository merchantRepository,
+            @Autowired final ContactRepository contactRepository,
+            @Autowired final RoleRepository roleRepository,
+            @Autowired final PasswordEncoder encoder
+    ) {
+        return (args) -> {
+            if (!userRepository.existsByUsername("merchant@toyland.com")) {
+                User user = new User(
+                        "merchant@toyland.com",
+                        encoder.encode("merchant123")
+                );
+                Role role = roleRepository
+                        .findByName(ERole.MERCHANT)
+                        .orElseThrow(RuntimeException::new);
+                user.setRoles(new HashSet<>(List.of(role)));
+                Merchant merchant = new Merchant();
+                Contact contact = Contact
+                        .builder()
+                        .addressLine1("42 Maine Street")
+                        .county("Dublin")
+                        .country("Ireland")
+                        .postcode("VP54K0")
+                        .mobileNo("+353894900445")
+                        .build();
+                merchant.setUser(user);
+                userRepository.save(user);
+                contactRepository.save(contact);
+                merchantRepository.save(merchant);
+            }
+        };
+    }
+
     @Bean("create_admins")
     @DependsOn("create_roles")
     @Transactional
     CommandLineRunner createAdmins(
             @Autowired RoleRepository roleRepository,
             @Autowired UserRepository userRepository,
-            @Autowired CustomerRepository customerRepository,
-            @Autowired MerchantRepository merchantRepository,
-            @Autowired ContactRepository contactRepository,
-            @Autowired PaymentRepository paymentRepository,
             @Autowired PasswordEncoder encoder
     ) {
         return (String... args) -> {
@@ -57,58 +128,6 @@ public class Bootstrapper {
                         .orElseThrow(() -> new RuntimeException(ERole.ADMIN + " role not found!"));
                 admin.setRoles(new HashSet<>(List.of(role)));
                 userRepository.save(admin);
-            }
-
-            if (!userRepository.existsByUsername("merchant@toyland.com")) {
-                User user = new User(
-                        "merchant@toyland.com",
-                        encoder.encode("merchant123")
-                );
-                Role role = roleRepository
-                        .findByName(ERole.MERCHANT)
-                        .orElseThrow(() -> new RuntimeException(ERole.MERCHANT + " role not found!"));
-                user.setRoles(new HashSet<>(List.of(role)));
-                Merchant merchant = new Merchant();
-                Contact contact = Contact
-                        .builder()
-                        .addressLine1("42 Maine Street")
-                        .county("Dublin")
-                        .country("Ireland")
-                        .postcode("VP54K0")
-                        .mobileNo("+353894900445")
-                        .build();
-                merchant.setUser(user);
-                merchant.setContact(contact);
-                userRepository.save(user);
-                contactRepository.save(contact);
-                merchantRepository.save(merchant);
-            }
-
-            if (!userRepository.existsByUsername("customer@toyland.com")) {
-
-                User customer = new User(
-                        "customer@toyland.com",
-                        encoder.encode("customer123")
-                );
-                Role role = roleRepository
-                        .findByName(ERole.CUSTOMER)
-                        .orElseThrow(() -> new RuntimeException(ERole.CUSTOMER + " role not found!"));
-                customer.setRoles(new HashSet<>(List.of(role)));
-                userRepository.save(customer);
-
-                Customer association = new Customer();
-                association.setUser(customer);
-                customerRepository.save(association);
-
-                Contact c = Contact.builder().build();
-                contactRepository.save(c);
-                Payment p = Payment.builder().build();
-                paymentRepository.save(p);
-
-                association.setContact(c);
-                association.setPayment(p);
-                contactRepository.save(c);
-
             }
         };
     }

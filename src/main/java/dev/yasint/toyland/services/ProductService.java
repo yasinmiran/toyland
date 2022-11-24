@@ -2,7 +2,7 @@ package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ResourceAccessException;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 
 import java.util.List;
 

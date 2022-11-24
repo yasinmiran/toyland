@@ -4,7 +4,7 @@ import dev.yasint.toyland.dtos.request.ProductDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.exceptions.ResourceAccessException;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.ProductService;
 import dev.yasint.toyland.utils.Common;
 import lombok.RequiredArgsConstructor;

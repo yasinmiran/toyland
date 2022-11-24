@@ -1,4 +1,4 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
 import dev.yasint.toyland.models.contracts.Completable;
 import lombok.AllArgsConstructor;
@@ -20,6 +20,7 @@ public class Payment implements Completable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
     private String number;
     private String cvv;

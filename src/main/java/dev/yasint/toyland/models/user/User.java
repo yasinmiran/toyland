@@ -1,5 +1,7 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.yasint.toyland.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,7 @@ public class User {
      */
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
