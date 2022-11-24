@@ -1,10 +1,10 @@
 package dev.yasint.toyland.repositories;
 
-import dev.yasint.toyland.models.user.Contact;
+import dev.yasint.toyland.models.user.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ContactRepository extends JpaRepository<Contact, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
 }

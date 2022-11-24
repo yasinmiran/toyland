@@ -1,7 +1,7 @@
 package dev.yasint.toyland.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

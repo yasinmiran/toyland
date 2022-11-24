@@ -1,5 +1,6 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
+import dev.yasint.toyland.models.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Merchant {
 
     @Id
@@ -25,20 +26,13 @@ public class Merchant {
     )
     private User user;
 
-    @OneToOne
-    @JoinColumn(
-            name = "fk_merchant_contact_id",
-            referencedColumnName = "id"
-    )
-    private Contact contact;
-
     @OneToMany
     @JoinTable(
             name = "merchant_products",
             joinColumns = @JoinColumn(name = "merchant_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> product = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
     private Boolean verified = false;
 
