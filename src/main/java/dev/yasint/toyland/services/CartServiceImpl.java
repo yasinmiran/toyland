@@ -4,8 +4,9 @@ import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
-import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.Product;
+import dev.yasint.toyland.models.__Order;
+import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.*;
 import dev.yasint.toyland.utils.Common;
@@ -133,6 +134,8 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    // Checkout handover -> Order
+
     @Override
     public void checkout() throws ProfileInCompleteException {
 
@@ -155,8 +158,37 @@ public class CartServiceImpl implements CartService {
 
         // If everything is in place then create an order.
 
+        Cart cart = cartRepository.findCartByUser(user);
+        __Order order = new __Order();
 
+        // Set the mandatory associations.
+        order.setCart(cart);
+        order.setCustomer(customer);
 
+        // First calculate the price for products.
+        double price = calculatePrice(user, cart);
+        // TODO:Then apply the discounts.
+        // TODO:Finally, set the total price.
+        order.setTotalPrice(price);
+
+        // Set a dummy payment reference.
+        order.setPaymentReference("DUMMY-PAYMENT-REFERENCE");
+
+    }
+
+    public double calculatePrice(User user, Cart cart) {
+
+//        cart.getItems().stream().map(item -> {
+//
+//            Optional<Product> prod = productRepository.findById(item.getProductId());
+//
+//            if (prod.isPresent()) {
+//                prod.get().get
+//            }
+//
+//        })
+
+        return 0;
     }
 
 }
