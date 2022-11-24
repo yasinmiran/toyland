@@ -1,15 +1,14 @@
 package dev.yasint.toyland.services;
 
+import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
-import dev.yasint.toyland.models.Customer;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.User;
-import dev.yasint.toyland.repositories.CartItemRepository;
-import dev.yasint.toyland.repositories.CartRepository;
-import dev.yasint.toyland.repositories.CustomerRepository;
-import dev.yasint.toyland.repositories.ProductRepository;
+import dev.yasint.toyland.models.__Order;
+import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.User;
+import dev.yasint.toyland.repositories.*;
 import dev.yasint.toyland.utils.Common;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +28,8 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final CartItemRepository cartItemRepository;
+    private final ContactRepository contactRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public Cart getCart() {
@@ -75,6 +76,7 @@ public class CartServiceImpl implements CartService {
         });
 
         // FIXME: remove the stale items from table
+        // TODO(yasinmiran):
         cartItemRepository.deleteAllById(removedCartItemIds);
 
         Cart.CartItem cartItem = new Cart.CartItem();
@@ -130,6 +132,63 @@ public class CartServiceImpl implements CartService {
 
         return cartRepository.save(cart);
 
+    }
+
+    // Checkout handover -> Order
+
+    @Override
+    public void checkout() throws ProfileInCompleteException {
+
+        // Check whether the user profile is completed
+
+        User user = Common.getUserDetailsFromContext().getUser();
+        Customer customer = customerRepository.findCustomerByUser(user);
+
+        if (!customer.getContact().isCompleted()) {
+            throw new ProfileInCompleteException(
+                    "Please fill in contact details to proceed."
+            );
+        }
+
+        if (!customer.getPayment().isCompleted()) {
+            throw new ProfileInCompleteException(
+                    "Please add your payment details to checkout."
+            );
+        }
+
+        // If everything is in place then create an order.
+
+        Cart cart = cartRepository.findCartByUser(user);
+        __Order order = new __Order();
+
+        // Set the mandatory associations.
+        order.setCart(cart);
+        order.setCustomer(customer);
+
+        // First calculate the price for products.
+        double price = calculatePrice(user, cart);
+        // TODO:Then apply the discounts.
+        // TODO:Finally, set the total price.
+        order.setTotalPrice(price);
+
+        // Set a dummy payment reference.
+        order.setPaymentReference("DUMMY-PAYMENT-REFERENCE");
+
+    }
+
+    public double calculatePrice(User user, Cart cart) {
+
+//        cart.getItems().stream().map(item -> {
+//
+//            Optional<Product> prod = productRepository.findById(item.getProductId());
+//
+//            if (prod.isPresent()) {
+//                prod.get().get
+//            }
+//
+//        })
+
+        return 0;
     }
 
 }

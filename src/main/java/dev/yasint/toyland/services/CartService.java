@@ -1,6 +1,6 @@
 package dev.yasint.toyland.services;
 
-import dev.yasint.toyland.exceptions.ResourceNotFoundException;
+import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
 
@@ -14,5 +14,7 @@ public interface CartService {
     Cart removeItemFromCart(Long productId) throws UnableToSatisfyException;
 
     Cart emptyCart() throws UnableToSatisfyException;
+
+    void checkout() throws ProfileInCompleteException;
 
 }
