@@ -4,6 +4,7 @@ import dev.yasint.toyland.exceptions.ResourceAccessException;
 import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.enumerations.Event;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final MerchantRepository merchantRepository;
+
+    private final SubjectService subjectService;
 
     @Override
     public Product findProductById(Long id) throws ResourceAccessException {
@@ -46,15 +49,14 @@ public class ProductServiceImpl implements ProductService {
     public Product saveProduct(User owner, Product partial) {
         Merchant merchant = merchantRepository.findMerchantByUser(owner);
         partial.setMerchant(merchant);
+        subjectService.notifyObservers(owner, Event.NEW_PRODUCT);
         return productRepository.save(partial);
     }
 
     @Override
     public List<Product> saveAllProducts(User owner, List<Product> products) {
         Merchant merchant = merchantRepository.findMerchantByUser(owner);
-        products.forEach(product -> {
-            product.setMerchant(merchant);
-        });
+        products.forEach(product -> product.setMerchant(merchant));
         return productRepository.saveAll(products);
     }
 

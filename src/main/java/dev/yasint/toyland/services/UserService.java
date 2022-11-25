@@ -16,4 +16,5 @@ public interface UserService {
 
     User createAndSaveUser(User user, ERole role) throws UnableToSatisfyException;
 
+    User getUserReferenceById(Long id);
 }
