@@ -1,6 +1,5 @@
 package dev.yasint.toyland.repositories;
 
-import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.Order;
 import dev.yasint.toyland.models.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;

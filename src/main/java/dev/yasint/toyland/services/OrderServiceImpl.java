@@ -4,6 +4,8 @@ import dev.yasint.toyland.dtos.request.OrderProductDTO;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.*;
 import dev.yasint.toyland.models.enumerations.EOrderStatus;
+import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

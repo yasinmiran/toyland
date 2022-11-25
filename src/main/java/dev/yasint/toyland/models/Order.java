@@ -1,6 +1,7 @@
 package dev.yasint.toyland.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.yasint.toyland.models.user.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,12 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "orders")
+@Table(
+        name = "orders",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "orderNo")
+        }
+)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
@@ -34,14 +40,6 @@ public class Order {
     private String description;
 
     private LocalDateTime createdAt;
-
-//    @OneToMany
-//    @JoinTable(
-//            name = "order_products",
-//            joinColumns = @JoinColumn(name = "order_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
