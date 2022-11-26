@@ -1,4 +1,4 @@
-package dev.yasint.toyland.models.invoice.discount;
+package dev.yasint.toyland.models.discount;
 
 public interface Discount {
 

@@ -45,6 +45,12 @@ public class CartControllerImpl implements CartController {
         }
     }
 
+    /**
+     * FIXME(yasinmiran): Throws an exception when removing.
+     *
+     * @param id {Long} cart ID
+     * @return ResponseEntity
+     */
     @Override
     @DeleteMapping("/item/{id}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
@@ -91,7 +97,6 @@ public class CartControllerImpl implements CartController {
     @PostMapping("/checkout")
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> checkout() {
-
         try {
             cartService.checkout();
         } catch (ProfileInCompleteException e) {
