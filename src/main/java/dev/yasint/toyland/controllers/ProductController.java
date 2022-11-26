@@ -7,18 +7,17 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ProductController {
+    ResponseEntity<?> deleteProduct(Long productId);
+    
+    ResponseEntity<?> addAllProducts(List<ProductDTO> product);
 
     ResponseEntity<?> addProduct(ProductDTO product);
 
-    ResponseEntity<?> addAllProducts(List<ProductDTO> product);
-
+    
     ResponseEntity<?> getProductDetails(Long productId);
-
-    ResponseEntity<?> getProducts();
-
+    
+    
     ResponseEntity<?> editProduct(Product product);
-
-    ResponseEntity<?> deleteProduct(Long productId);
-
+    ResponseEntity<?> getProducts();
 
 }
