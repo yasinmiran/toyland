@@ -13,4 +13,6 @@ public interface CartController {
 
     ResponseEntity<?> clearCart();
 
+    ResponseEntity<?> checkout();
+
 }

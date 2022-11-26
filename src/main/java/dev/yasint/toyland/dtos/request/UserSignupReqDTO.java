@@ -2,7 +2,7 @@ package dev.yasint.toyland.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.yasint.toyland.constants.Validation;
-import dev.yasint.toyland.models.Contact;
+import dev.yasint.toyland.models.user.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

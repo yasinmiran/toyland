@@ -1,10 +1,10 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ResourceAccessException;
-import dev.yasint.toyland.models.Merchant;
+import dev.yasint.toyland.models.user.Merchant;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.Event;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;

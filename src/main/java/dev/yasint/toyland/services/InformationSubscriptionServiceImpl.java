@@ -1,7 +1,7 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.models.InformationSubscription;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.models.enumerations.Event;
 import dev.yasint.toyland.repositories.InformationSubscriptionRepository;
 import dev.yasint.toyland.models.Observer;

@@ -1,6 +1,7 @@
 package dev.yasint.toyland.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.yasint.toyland.models.user.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

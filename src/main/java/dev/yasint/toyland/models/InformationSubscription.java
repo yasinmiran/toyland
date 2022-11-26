@@ -2,6 +2,7 @@ package dev.yasint.toyland.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.yasint.toyland.models.enumerations.Event;
+import dev.yasint.toyland.models.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

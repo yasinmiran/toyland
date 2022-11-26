@@ -1,6 +1,6 @@
 package dev.yasint.toyland.services;
 
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

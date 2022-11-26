@@ -2,9 +2,9 @@ package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
-import dev.yasint.toyland.models.Merchant;
+import dev.yasint.toyland.models.user.Merchant;
 import dev.yasint.toyland.models.Role;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.enumerations.EVerificationStatus;
 import dev.yasint.toyland.models.verification.Verification;

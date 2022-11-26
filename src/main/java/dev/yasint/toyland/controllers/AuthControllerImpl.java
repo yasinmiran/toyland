@@ -7,7 +7,7 @@ import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.dtos.response.UserInfoResDTO;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.exceptions.UserExistsException;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.services.UserDetailsImpl;
 import dev.yasint.toyland.services.UserService;

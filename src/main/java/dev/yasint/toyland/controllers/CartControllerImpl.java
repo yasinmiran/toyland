@@ -2,6 +2,7 @@ package dev.yasint.toyland.controllers;
 
 import dev.yasint.toyland.dtos.request.CartAddDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
+import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
@@ -84,6 +85,23 @@ public class CartControllerImpl implements CartController {
                     new MessageResDTO(e.getMessage())
             );
         }
+    }
+
+    @Override
+    @PostMapping("/checkout")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
+    public ResponseEntity<?> checkout() {
+
+        try {
+            cartService.checkout();
+        } catch (ProfileInCompleteException e) {
+            return ResponseEntity.badRequest().body(
+                    new MessageResDTO(
+                            e.getMessage()
+                    )
+            );
+        }
+        return null;
     }
 
 }

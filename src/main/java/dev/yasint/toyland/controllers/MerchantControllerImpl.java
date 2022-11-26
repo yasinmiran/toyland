@@ -5,7 +5,7 @@ import dev.yasint.toyland.dtos.request.VerificationUpdateDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.models.verification.Verification;
 import dev.yasint.toyland.services.MerchantService;
 import dev.yasint.toyland.utils.Common;

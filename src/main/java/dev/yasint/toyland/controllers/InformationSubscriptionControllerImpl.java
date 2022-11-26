@@ -2,7 +2,7 @@ package dev.yasint.toyland.controllers;
 
 import dev.yasint.toyland.dtos.request.SubscriptionDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.InformationSubscriptionService;
 import dev.yasint.toyland.services.UserService;
 import dev.yasint.toyland.utils.Common;
@@ -42,8 +42,6 @@ public class InformationSubscriptionControllerImpl implements InformationSubscri
     public ResponseEntity<?> removeSubscriber(@Valid @RequestBody SubscriptionDTO subscription) {
         User observerUser = Common.getUserDetailsFromContext().getUser();
         User subjectUser = userService.getUserReferenceById(subscription.getSubjectId());
-        System.out.println(observerUser);
-        System.out.println(subjectUser);
         informationSubscriptionService.removeSubscription(subjectUser, observerUser, subscription.getEvent());
         return ResponseEntity.ok()
                 .body(new MessageResDTO("Subscription successfully removed."));

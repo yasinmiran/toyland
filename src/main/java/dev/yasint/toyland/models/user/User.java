@@ -1,6 +1,11 @@
-package dev.yasint.toyland.models;
+package dev.yasint.toyland.models.user;
 
+import dev.yasint.toyland.models.InformationSubscription;
+import dev.yasint.toyland.models.Observer;
+import dev.yasint.toyland.models.Subject;
 import dev.yasint.toyland.models.enumerations.Event;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.yasint.toyland.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +26,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username")
         }
 )
-public class User implements Subject,Observer {
+public class User implements Subject, Observer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,6 +39,7 @@ public class User implements Subject,Observer {
      */
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String name;

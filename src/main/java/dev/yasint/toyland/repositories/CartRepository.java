@@ -1,7 +1,7 @@
 package dev.yasint.toyland.repositories;
 
 import dev.yasint.toyland.models.Cart;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

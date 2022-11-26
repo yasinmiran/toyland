@@ -4,7 +4,7 @@ import dev.yasint.toyland.dtos.request.CreateOrderDTO;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.Order;
 import dev.yasint.toyland.models.OrderDetail;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.OrderDetailService;
 import dev.yasint.toyland.services.OrderService;
 import dev.yasint.toyland.utils.Common;

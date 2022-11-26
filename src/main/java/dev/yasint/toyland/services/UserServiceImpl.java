@@ -2,11 +2,11 @@ package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.exceptions.UserExistsException;
-import dev.yasint.toyland.models.Customer;
-import dev.yasint.toyland.models.Merchant;
 import dev.yasint.toyland.models.Role;
-import dev.yasint.toyland.models.User;
 import dev.yasint.toyland.models.enumerations.ERole;
+import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.Merchant;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.CustomerRepository;
 import dev.yasint.toyland.repositories.MerchantRepository;
 import dev.yasint.toyland.repositories.RoleRepository;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public List<Role> saveAllRoles(final List<Role> roles) {
+    public void saveAllRoles(final List<Role> roles) {
         Set<Role> filteredRoles = new HashSet<>();
         for (Role role : roles) {
             if (!roleRepository.existsRoleByName(role.getName())) {
@@ -42,9 +41,7 @@ public class UserServiceImpl implements UserService {
         if (filteredRoles.size() > 0) {
             List<Role> saved = roleRepository.saveAll(filteredRoles);
             log.info("saved {} roles", saved.size());
-            return saved;
         }
-        return new ArrayList<>();
     }
 
     @Override
@@ -55,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createAndSaveUser(User user, ERole role) throws UnableToSatisfyException {
+    public void createAndSaveUser(User user, ERole role) throws UnableToSatisfyException {
 
         Role userRole = roleRepository
                 .findByName(role)
@@ -79,8 +76,6 @@ public class UserServiceImpl implements UserService {
             customer.setUser(user);
             customerRepository.save(customer);
         }
-
-        return user;
 
     }
 

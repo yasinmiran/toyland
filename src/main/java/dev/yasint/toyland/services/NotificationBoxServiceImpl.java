@@ -1,7 +1,7 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.models.NotificationBox;
-import dev.yasint.toyland.models.User;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.NotificationBoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
