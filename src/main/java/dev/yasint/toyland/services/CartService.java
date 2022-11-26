@@ -8,8 +8,7 @@ public interface CartService {
 
     Cart getCart() throws UnableToSatisfyException;
 
-    Cart addItemToCart(Long productId, Integer quantity)
-            throws Exception;
+    Cart addItemToCart(Long productId, Integer quantity) throws Exception;
 
     Cart removeItemFromCart(Long productId) throws UnableToSatisfyException;
 
