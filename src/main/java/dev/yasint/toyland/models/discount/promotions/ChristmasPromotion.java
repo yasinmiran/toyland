@@ -1,6 +1,6 @@
-package dev.yasint.toyland.models.invoice.discount.promotions;
+package dev.yasint.toyland.models.discount.promotions;
 
-import dev.yasint.toyland.models.invoice.discount.Discount;
+import dev.yasint.toyland.models.discount.Discount;
 
 public class ChristmasPromotion extends PromotionsDiscountDecorator {
 

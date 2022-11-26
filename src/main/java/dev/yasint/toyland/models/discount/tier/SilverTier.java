@@ -1,6 +1,6 @@
-package dev.yasint.toyland.models.invoice.discount.tier;
+package dev.yasint.toyland.models.discount.tier;
 
-import dev.yasint.toyland.models.invoice.discount.Discount;
+import dev.yasint.toyland.models.discount.Discount;
 
 public class SilverTier extends TierDiscountDecorator {
 

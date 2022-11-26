@@ -1,12 +1,15 @@
 package dev.yasint.toyland.models.user;
 
 import dev.yasint.toyland.models.Cart;
+import dev.yasint.toyland.models.Order;
 import dev.yasint.toyland.models.enumerations.ECustomerTier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -25,6 +28,9 @@ public class Customer {
     )
     private User user;
 
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders = new HashSet<>();
+
     @OneToOne
     @JoinColumn(
             name = "fk_contact_id",
@@ -39,7 +45,7 @@ public class Customer {
     )
     private Payment payment;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(
             name = "fk_user_cart_id",
             referencedColumnName = "id")

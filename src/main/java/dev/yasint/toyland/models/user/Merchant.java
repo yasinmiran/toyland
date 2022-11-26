@@ -1,5 +1,6 @@
 package dev.yasint.toyland.models.user;
 
+import dev.yasint.toyland.models.Order;
 import dev.yasint.toyland.models.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -25,6 +28,9 @@ public class Merchant {
             referencedColumnName = "id"
     )
     private User user;
+
+    @ManyToMany
+    private Set<Order> orders = new HashSet<>();
 
     @OneToMany
     @JoinTable(

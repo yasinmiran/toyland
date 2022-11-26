@@ -65,7 +65,6 @@ public class ProductControllerImpl implements ProductController {
         }
     }
 
-
     /**
      * This is a public route. We use this endpoint to
      * list the products in the landing page of the application.
