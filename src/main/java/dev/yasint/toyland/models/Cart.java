@@ -24,7 +24,7 @@ public class Cart {
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "cart_items",
+            name = "cart_to_cart_items_mapping",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "cart_item_id")
     )

@@ -34,7 +34,7 @@ public class Merchant {
 
     @OneToMany
     @JoinTable(
-            name = "merchant_products",
+            name = "merchant_to_product_mapping",
             joinColumns = @JoinColumn(name = "merchant_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
