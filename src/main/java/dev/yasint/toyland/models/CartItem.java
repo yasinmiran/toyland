@@ -18,7 +18,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "cart_item_instance_product",
+            name = "cart_item_to_product_mapping",
             joinColumns = @JoinColumn(name = "cart_item_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
