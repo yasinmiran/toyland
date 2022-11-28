@@ -106,11 +106,16 @@ public class OrderServiceImpl implements OrderService {
 
         // TODO:
         // Do a dummy payment authorization.
-        // paymentService.deduct();
+        // i.e., paymentService.deduct();
 
         // TODO:
         // Set a dummy payment reference.
-        // order.setPaymentReference("DUMMY-PAYMENT-REFERENCE");
+        // i.e., order.setPaymentReference("REFERENCE-123");
+
+        // TODO:
+        // Once the payment is succeeded, the system should
+        // auto allocate a Driver to pick up the items and
+        // do the delivery.
 
         return orderRepository.save(order);
 

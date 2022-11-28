@@ -42,7 +42,7 @@ public class Driver {
 
     @OneToMany
     @JoinTable(
-            name = "order_mapping_deliveries",
+            name = "driver_to_order_mapping",
             joinColumns = @JoinColumn(name = "driver_id"),
             inverseJoinColumns = @JoinColumn(name = "delivery_order_id")
     )
