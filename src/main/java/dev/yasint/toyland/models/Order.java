@@ -57,11 +57,11 @@ public class Order {
 
     // Builder ===============>
 
-    public static Builder builder() {
-        return new Builder();
+    public static OrderBuilder builder() {
+        return new OrderBuilder();
     }
 
-    public static class Builder {
+    public static class OrderBuilder {
 
         private Customer customer;
         private LocalDateTime createdAt;
@@ -71,42 +71,42 @@ public class Order {
         private Set<Merchant> merchants;
         private EOrderStatus status;
 
-        public Builder customer(Customer customer) {
+        public OrderBuilder customer(Customer customer) {
             this.customer = customer;
             return this;
         }
 
-        public Builder createdAt(LocalDateTime createdAt) {
+        public OrderBuilder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public Builder modifiedAt(LocalDateTime modifiedAt) {
+        public OrderBuilder modifiedAt(LocalDateTime modifiedAt) {
             this.modifiedAt = modifiedAt;
             return this;
         }
 
-        public Builder cart(Cart cart) {
+        public OrderBuilder cart(Cart cart) {
             this.cart = cart;
             return this;
         }
 
-        public Builder price(BigDecimal price) {
+        public OrderBuilder price(BigDecimal price) {
             this.price = price;
             return this;
         }
 
-        public Builder status(EOrderStatus status) {
+        public OrderBuilder status(EOrderStatus status) {
             this.status = status;
             return this;
         }
 
-        public Builder merchants(Set<Merchant> merchants) {
+        public OrderBuilder merchants(Set<Merchant> merchants) {
             this.merchants = merchants;
             return this;
         }
 
-        public Builder merchant(Merchant merchant) {
+        public OrderBuilder merchant(Merchant merchant) {
             if (merchants == null) {
                 this.merchants = new HashSet<>();
             }

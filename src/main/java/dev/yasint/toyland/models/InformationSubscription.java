@@ -38,26 +38,26 @@ public class InformationSubscription {
     @Enumerated(EnumType.STRING)
     private Event event;
 
-    public static Builder builder() {
-        return new Builder();
+    public static InformationSubscriptionBuilder builder() {
+        return new InformationSubscriptionBuilder();
     }
 
-    public static class Builder {
+    public static class InformationSubscriptionBuilder {
         private User subject;
         private User observer;
         private Event event;
 
-        public Builder subject(User subject) {
+        public InformationSubscriptionBuilder subject(User subject) {
             this.subject = subject;
             return this;
         }
 
-        public Builder observer(User observer) {
+        public InformationSubscriptionBuilder observer(User observer) {
             this.observer = observer;
             return this;
         }
 
-        public Builder event(Event event) {
+        public InformationSubscriptionBuilder event(Event event) {
             this.event = event;
             return this;
         }
