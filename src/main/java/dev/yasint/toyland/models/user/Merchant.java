@@ -29,6 +29,20 @@ public class Merchant {
     )
     private User user;
 
+    @OneToOne
+    @JoinColumn(
+            name = "fk_merchant_contact",
+            referencedColumnName = "id"
+    )
+    private Contact contact;
+
+    @OneToOne
+    @JoinColumn(
+            name = "fk_payment_detail_id",
+            referencedColumnName = "id"
+    )
+    private Payment payment;
+
     @ManyToMany
     private Set<Order> orders = new HashSet<>();
 
