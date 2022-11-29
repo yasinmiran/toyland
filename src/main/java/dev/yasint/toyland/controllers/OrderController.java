@@ -10,6 +10,6 @@ public interface OrderController {
 
     ResponseEntity<?> getCustomerOrders(Long customerId);
 
-    ResponseEntity<?> updateOrderStatus(Long orderDetailId);
+    ResponseEntity<?> updateOrderStatus(Long orderId);
 
 }
