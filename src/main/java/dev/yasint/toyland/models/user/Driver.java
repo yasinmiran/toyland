@@ -20,6 +20,13 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(
+            name = "fk_user_id",
+            referencedColumnName = "id"
+    )
+    private User user;
+
     private String licensePlate;
 
     /**
