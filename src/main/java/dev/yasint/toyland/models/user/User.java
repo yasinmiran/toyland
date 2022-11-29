@@ -44,8 +44,6 @@ public class User implements Subject, Observer {
     @JsonIgnore
     private String password;
 
-    private String name;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "user_roles_mapping",
