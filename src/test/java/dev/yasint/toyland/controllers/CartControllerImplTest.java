@@ -22,7 +22,7 @@ public class CartControllerImplTest {
     }
 
     @Test
-    void isDiscountIsApplied() {
+    void isDiscountApplied() {
         Discount discount = new ChristmasPromotion(
                 new SilverTier(
                         new BaseDiscount(100)
