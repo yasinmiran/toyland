@@ -3,9 +3,7 @@ package dev.yasint.toyland.models;
 import dev.yasint.toyland.models.enumerations.EOrderStatus;
 import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.user.Merchant;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,7 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
