@@ -75,10 +75,6 @@ public class Order {
             return this;
         }
 
-        public Builder orderNo(String orderNo) {
-            this.orderNo = orderNo;
-        }
-      
         public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
