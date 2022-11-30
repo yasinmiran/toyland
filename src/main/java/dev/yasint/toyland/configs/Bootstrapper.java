@@ -1,5 +1,6 @@
 package dev.yasint.toyland.configs;
 
+import dev.yasint.toyland.models.Cart;
 import dev.yasint.toyland.models.Role;
 import dev.yasint.toyland.models.enumerations.ECustomerTier;
 import dev.yasint.toyland.models.enumerations.ERole;
@@ -45,6 +46,7 @@ public class Bootstrapper {
             @Autowired final RoleRepository roleRepository,
             @Autowired final ContactRepository contactRepository,
             @Autowired final PaymentRepository paymentRepository,
+            @Autowired final CartRepository cartRepository,
             @Autowired final PasswordEncoder encoder
     ) {
         return (args) -> {
@@ -60,14 +62,17 @@ public class Bootstrapper {
                 Contact contact = new Contact();
                 Payment payment = new Payment();
                 Customer customer = new Customer();
+                Cart cart = new Cart();
                 customer.setUser(user);
                 customer.setContact(contact);
                 customer.setPayment(payment);
                 customer.setTier(ECustomerTier.NONE);
+                customer.setCart(cart);
                 userRepository.save(user);
                 paymentRepository.save(payment);
                 contactRepository.save(contact);
                 customerRepository.save(customer);
+                cartRepository.save(cart);
             }
         };
     }

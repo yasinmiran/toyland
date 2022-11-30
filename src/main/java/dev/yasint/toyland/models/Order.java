@@ -1,20 +1,22 @@
 package dev.yasint.toyland.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import dev.yasint.toyland.models.enumerations.EOrderStatus;
+import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.Merchant;
+import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -23,39 +25,50 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(
-            name = "fk_customer_id",
+            name = "fk_order_customer_id",
             referencedColumnName = "id"
     )
-    @JsonIgnore
     private Customer customer;
 
-    private String orderNo;
-
-    private String description;
+    @ManyToMany
+    @JoinTable(
+            name = "order_to_merchants_mapping",
+            joinColumns = @JoinColumn(name = "mapping_order_id"),
+            inverseJoinColumns = @JoinColumn(name = "mapping_merchant_id")
+    )
+    private Set<Merchant> merchants = new HashSet<>();
 
     private LocalDateTime createdAt;
 
-//    @OneToMany
-//    @JoinTable(
-//            name = "order_products",
-//            joinColumns = @JoinColumn(name = "order_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private List<Product> products = new ArrayList<>();
+    private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "fk_cart_id",
+            referencedColumnName = "id"
+    )
+    private Cart cart;
+
+    private BigDecimal price = new BigDecimal(0);
+
+    @Enumerated(EnumType.STRING)
+    private EOrderStatus status;
+
+    // Builder ===============>
 
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private Customer customer;
-        private String orderNo;
-        private String description;
 
+        private Customer customer;
         private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private Cart cart;
+        private BigDecimal price;
+        private Set<Merchant> merchants;
+        private EOrderStatus status;
 
         public Builder customer(Customer customer) {
             this.customer = customer;
@@ -63,31 +76,59 @@ public class Order {
         }
 
         public Builder orderNo(String orderNo) {
-            
             this.orderNo = orderNo;
-
-            return this;
         }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
+      
         public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder modifiedAt(LocalDateTime modifiedAt) {
+            this.modifiedAt = modifiedAt;
+            return this;
+        }
+
+        public Builder cart(Cart cart) {
+            this.cart = cart;
+            return this;
+        }
+
+        public Builder price(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder status(EOrderStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder merchants(Set<Merchant> merchants) {
+            this.merchants = merchants;
+            return this;
+        }
+
+        public Builder merchant(Merchant merchant) {
+            if (merchants == null) {
+                this.merchants = new HashSet<>();
+            }
+            this.merchants.add(merchant);
             return this;
         }
 
         public Order build() {
             Order order = new Order();
             order.setCustomer(customer);
-            order.setOrderNo(orderNo);
-            order.setDescription(description);
             order.setCreatedAt(createdAt);
-            order.setOrderDetails(new ArrayList<>());
+            order.setModifiedAt(modifiedAt);
+            order.setCart(cart);
+            order.setPrice(price);
+            order.setMerchants(merchants);
+            order.setStatus(status);
             return order;
         }
 
     }
+
 }

@@ -4,14 +4,17 @@ import dev.yasint.toyland.exceptions.ProfileInCompleteException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Cart;
+import dev.yasint.toyland.models.CartItem;
 import dev.yasint.toyland.models.Product;
-import dev.yasint.toyland.models.__Order;
 import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.user.User;
-import dev.yasint.toyland.repositories.*;
+import dev.yasint.toyland.repositories.CartItemRepository;
+import dev.yasint.toyland.repositories.CartRepository;
+import dev.yasint.toyland.repositories.CustomerRepository;
+import dev.yasint.toyland.repositories.ProductRepository;
 import dev.yasint.toyland.utils.Common;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class CartServiceImpl implements CartService {
 
@@ -28,27 +30,38 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final CartItemRepository cartItemRepository;
-    private final ContactRepository contactRepository;
-    private final PaymentRepository paymentRepository;
+    private final OrderServiceImpl orderService;
+
+    @Autowired
+    public CartServiceImpl(CartRepository cartRepository,
+                           ProductRepository productRepository,
+                           CustomerRepository customerRepository,
+                           CartItemRepository cartItemRepository,
+                           OrderServiceImpl orderService) {
+        this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
+        this.customerRepository = customerRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.orderService = orderService;
+    }
 
     @Override
     public Cart getCart() {
         User user = Common.getUserDetailsFromContext().getUser();
         Customer customer = customerRepository.findCustomerByUser(user);
-        Cart cart = cartRepository.findCartByUser(user);
+        Cart cart = customer.getCart();
         if (cart == null) {
-            Cart newCart = new Cart();
-            newCart.setItems(new ArrayList<>());
-            newCart.setUser(user);
-            cart = cartRepository.save(newCart);
-            customer.setCart(cart);
+            Cart _cart = new Cart();
+            _cart.setItems(new ArrayList<>());
+            customer.setCart(cartRepository.save(_cart));
             customerRepository.save(customer);
-            return cart;
+            return customer.getCart();
         }
         return cart;
     }
 
     @Override
+    @Transactional
     public Cart addItemToCart(Long productId, Integer quantity) throws Exception {
 
         Cart cart = getCart();
@@ -63,35 +76,29 @@ public class CartServiceImpl implements CartService {
             throw new Exception("Requested quantity is invalid.");
         }
 
-        List<Cart.CartItem> items = cart.getItems();
+        List<CartItem> items = cart.getItems();
 
-        Set<Long> removedCartItemIds = new HashSet<>();
+        Set<Long> removingItems = new HashSet<>();
 
         items.removeIf(item -> {
-            if (item.getProductId().equals(productId)) {
-                removedCartItemIds.add(item.getId());
+            if (item.getProduct().getId().equals(productId)) {
+                removingItems.add(item.getId());
                 return true;
             }
             return false;
         });
 
-        // FIXME: remove the stale items from table
-        // TODO(yasinmiran):
-        cartItemRepository.deleteAllById(removedCartItemIds);
+        if (removingItems.size() > 0)
+            cartItemRepository.deleteAllById(removingItems);
 
-        Cart.CartItem cartItem = new Cart.CartItem();
-        cartItem.setProductId(productId);
+        CartItem cartItem = new CartItem();
+        cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
+        List<CartItem> newList = new ArrayList<>(items);
+        newList.add(cartItem);
+        cart.setItems(newList);
 
-        items.add(cartItem);
-
-        Cart updatedCart = cartRepository.save(cart);
-
-        if (updatedCart.getItems().contains(cartItem)) {
-            log.info("Successfully added cart item.");
-        }
-
-        return updatedCart;
+        return cart;
 
     }
 
@@ -100,11 +107,11 @@ public class CartServiceImpl implements CartService {
 
         Cart cart = getCart();
 
-        List<Cart.CartItem> items = cart.getItems();
-        AtomicReference<Cart.CartItem> remove = new AtomicReference<>();
+        List<CartItem> items = cart.getItems();
+        AtomicReference<CartItem> remove = new AtomicReference<>();
 
         items.removeIf(item -> {
-            if (Objects.equals(item.getProductId(), productId)) {
+            if (Objects.equals(item.getProduct().getId(), productId)) {
                 remove.set(item);
                 return true;
             }
@@ -134,61 +141,13 @@ public class CartServiceImpl implements CartService {
 
     }
 
-    // Checkout handover -> Order
-
     @Override
     public void checkout() throws ProfileInCompleteException {
 
-        // Check whether the user profile is completed
-
         User user = Common.getUserDetailsFromContext().getUser();
         Customer customer = customerRepository.findCustomerByUser(user);
+        orderService.createOrder(customer, customer.getCart());
 
-        if (!customer.getContact().isCompleted()) {
-            throw new ProfileInCompleteException(
-                    "Please fill in contact details to proceed."
-            );
-        }
-
-        if (!customer.getPayment().isCompleted()) {
-            throw new ProfileInCompleteException(
-                    "Please add your payment details to checkout."
-            );
-        }
-
-        // If everything is in place then create an order.
-
-        Cart cart = cartRepository.findCartByUser(user);
-        __Order order = new __Order();
-
-        // Set the mandatory associations.
-        order.setCart(cart);
-        order.setCustomer(customer);
-
-        // First calculate the price for products.
-        double price = calculatePrice(user, cart);
-        // TODO:Then apply the discounts.
-        // TODO:Finally, set the total price.
-        order.setTotalPrice(price);
-
-        // Set a dummy payment reference.
-        order.setPaymentReference("DUMMY-PAYMENT-REFERENCE");
-
-    }
-
-    public double calculatePrice(User user, Cart cart) {
-
-//        cart.getItems().stream().map(item -> {
-//
-//            Optional<Product> prod = productRepository.findById(item.getProductId());
-//
-//            if (prod.isPresent()) {
-//                prod.get().get
-//            }
-//
-//        })
-
-        return 0;
     }
 
 }

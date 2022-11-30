@@ -1,7 +1,5 @@
 package dev.yasint.toyland.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.yasint.toyland.models.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,38 +18,16 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "fk_user_id")
-    @JsonIgnore
-    private User user;
-
     /**
      * By default, the cart is empty. Hence, an empty
      * array list is initialized.
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "cart_items",
+            name = "cart_to_cart_items_mapping",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "cart_item_id")
     )
     private List<CartItem> items = new ArrayList<>();
-
-    @Entity
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class CartItem {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long id;
-
-        private Long productId;
-
-        private Integer quantity;
-
-    }
-
 
 }

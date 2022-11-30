@@ -1,8 +1,8 @@
-package dev.yasint.toyland.models.invoice.discount.tier;
+package dev.yasint.toyland.models.discount.tier;
 
 import dev.yasint.toyland.models.enumerations.ECustomerTier;
-import dev.yasint.toyland.models.invoice.discount.BaseDiscount;
-import dev.yasint.toyland.models.invoice.discount.Discount;
+import dev.yasint.toyland.models.discount.BaseDiscount;
+import dev.yasint.toyland.models.discount.Discount;
 import dev.yasint.toyland.models.user.Customer;
 import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.CustomerRepository;
