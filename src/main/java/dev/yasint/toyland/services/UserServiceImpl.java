@@ -5,12 +5,10 @@ import dev.yasint.toyland.exceptions.UserExistsException;
 import dev.yasint.toyland.models.Role;
 import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.Driver;
 import dev.yasint.toyland.models.user.Merchant;
 import dev.yasint.toyland.models.user.User;
-import dev.yasint.toyland.repositories.CustomerRepository;
-import dev.yasint.toyland.repositories.MerchantRepository;
-import dev.yasint.toyland.repositories.RoleRepository;
-import dev.yasint.toyland.repositories.UserRepository;
+import dev.yasint.toyland.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +26,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final MerchantRepository merchantRepository;
     private final CustomerRepository customerRepository;
+
+    private final DriverRepository driverRepository;
 
     @Override
     public void saveAllRoles(final List<Role> roles) {
@@ -71,10 +71,14 @@ public class UserServiceImpl implements UserService {
             Merchant merchant = new Merchant();
             merchant.setUser(user);
             merchantRepository.save(merchant);
-        } else {
+        } else if (userRole.getName() == ERole.CUSTOMER) {
             Customer customer = new Customer();
             customer.setUser(user);
             customerRepository.save(customer);
+        } else {
+            Driver driver = new Driver();
+            driver.setUser(user);
+            driverRepository.save(driver);
         }
 
     }

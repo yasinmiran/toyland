@@ -1,6 +1,7 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ProfileInCompleteException;
+import dev.yasint.toyland.exceptions.ResourceAccessException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.Cart;
 import dev.yasint.toyland.models.CartItem;
@@ -8,7 +9,10 @@ import dev.yasint.toyland.models.Order;
 import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.discount.tier.TierDiscountFactory;
 import dev.yasint.toyland.models.enumerations.EOrderStatus;
+import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.user.Customer;
+import dev.yasint.toyland.models.user.Driver;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.repositories.CustomerRepository;
 import dev.yasint.toyland.repositories.OrderRepository;
 import dev.yasint.toyland.repositories.ProductRepository;
@@ -32,16 +36,20 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final TierDiscountFactory tierDiscountFactory;
 
+    private final DriverService driverService;
+
     @Autowired
     public OrderServiceImpl(
             OrderRepository orderRepository,
             CustomerRepository customerRepository,
             ProductRepository productRepository,
-            TierDiscountFactory tierDiscountFactory) {
+            TierDiscountFactory tierDiscountFactory,
+            DriverService driverService) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.tierDiscountFactory = tierDiscountFactory;
+        this.driverService = driverService;
     }
 
     public Order createOrder(Customer customer, Cart cart) throws ProfileInCompleteException {
@@ -116,6 +124,12 @@ public class OrderServiceImpl implements OrderService {
         // Once the payment is succeeded, the system should
         // auto allocate a Driver to pick up the items and
         // do the delivery.
+        Driver driver = driverService.getDriverByLowestDeliveries();
+        if (driver == null) {
+            log.error("No driver found. Unable to proceed with the order.");
+            throw new RuntimeException("Unable to process the order.");
+        }
+        driver.getDeliveries().add(order);
 
         return orderRepository.save(order);
 
@@ -139,4 +153,38 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllByCustomer(customer);
     }
 
+    @Override
+    public Order findOrderById(Long orderId) throws ResourceNotFoundException {
+        return orderRepository.findById(orderId).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public Order updateStatus(User user, Long orderId) throws ResourceNotFoundException, ResourceAccessException {
+        Order order = orderRepository.findById(orderId).orElseThrow(ResourceNotFoundException::new);
+        if (!isUserLegibleToUpdateOrder(user, order)) {
+            log.error("User is not legible to update order's current status");
+            throw new ResourceAccessException();
+        }
+        order.setStatus(EOrderStatus.values()[order.getStatus().ordinal() + 1]);
+        order.setModifiedAt(LocalDateTime.now());
+        return orderRepository.save(order);
+    }
+
+    private boolean isUserLegibleToUpdateOrder(User user, Order order) {
+        if (order.getStatus().equals(EOrderStatus.CREATED)
+                && user.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.MERCHANT))
+                && order.getMerchants().stream().anyMatch(merchant -> merchant.getUser().getId().equals(user.getId()))) {
+            return true;
+        } else if (order.getStatus().equals(EOrderStatus.PROCESSING)
+                && user.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.MERCHANT))
+                && order.getMerchants().stream().anyMatch(merchant -> merchant.getUser().getId().equals(user.getId()))) {
+            return true;
+        } else if (order.getStatus().equals(EOrderStatus.SHIPPING)
+                && user.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.DRIVER))
+                && driverService.isDriverAnOrderOwner(user, order)) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -1,8 +1,12 @@
 package dev.yasint.toyland.controllers;
 
+import dev.yasint.toyland.dtos.response.MessageResDTO;
+import dev.yasint.toyland.exceptions.ResourceAccessException;
 import dev.yasint.toyland.exceptions.ResourceNotFoundException;
 import dev.yasint.toyland.models.Order;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.OrderService;
+import dev.yasint.toyland.utils.Common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,8 +59,16 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @PutMapping("/update-status/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT', 'CUSTOMER', 'DRIVER')")
-    public ResponseEntity<?> updateOrderStatus(Long orderDetailId) {
-        return null;
+    public ResponseEntity<?> updateOrderStatus(@PathVariable("id") Long orderId) {
+        User user = Common.getUserDetailsFromContext().getUser();
+        try {
+            Order order = orderService.updateStatus(user, orderId);
+            return ResponseEntity.ok().body(new MessageResDTO("Order status successfully updated, new status: " + order.getStatus()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+    } catch (ResourceAccessException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
