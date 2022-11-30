@@ -12,4 +12,6 @@ public interface AuthController {
 
     ResponseEntity<?> logout();
 
+    ResponseEntity<?> registerDriver(UserSignupReqDTO body);
+
 }

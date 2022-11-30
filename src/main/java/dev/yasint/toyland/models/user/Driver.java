@@ -47,7 +47,7 @@ public class Driver {
     )
     private Location location;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "driver_to_order_mapping",
             joinColumns = @JoinColumn(name = "driver_id"),
