@@ -1,6 +1,7 @@
 package dev.yasint.toyland.services;
 
 import dev.yasint.toyland.exceptions.ResourceAccessException;
+import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.user.User;
 
@@ -14,7 +15,7 @@ public interface ProductService {
 
     boolean isProductOwnedByMerchant(Long productId, Long userId) throws ResourceAccessException;
 
-    Product saveProduct(User owner, Product partial);
+    Product saveProduct(User owner, Product partial) throws UnableToSatisfyException;
 
     List<Product> saveAllProducts(User owner, List<Product> products);
 
