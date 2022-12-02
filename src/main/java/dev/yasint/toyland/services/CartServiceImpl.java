@@ -61,7 +61,6 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional
     public Cart addItemToCart(Long productId, Integer quantity) throws Exception {
 
         Cart cart = getCart();
@@ -123,7 +122,7 @@ public class CartServiceImpl implements CartService {
 
         cart.setItems(List.copyOf(items));
 
-        return cartRepository.save(cart);
+        return cart;
 
     }
 
@@ -137,7 +136,7 @@ public class CartServiceImpl implements CartService {
 
         cart.setItems(new ArrayList<>());
 
-        return cartRepository.save(cart);
+        return cart;
 
     }
 
