@@ -93,7 +93,8 @@ public class AuthControllerImpl implements AuthController {
 
             final User user = new User(
                     body.getUsername(),
-                    encoder.encode(body.getPassword())
+                    encoder.encode(body.getPassword()),
+                    body.getName()
             );
 
             userService.createAndSaveUser(user, eRole);
