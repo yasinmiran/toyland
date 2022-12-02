@@ -53,7 +53,8 @@ public class Bootstrapper {
             if (!userRepository.existsByUsername("customer@toyland.com")) {
                 User user = new User(
                         "customer@toyland.com",
-                        encoder.encode("customer123")
+                        encoder.encode("customer123"),
+                        "Name"
                 );
                 Role role = roleRepository
                         .findByName(ERole.CUSTOMER)
@@ -91,7 +92,8 @@ public class Bootstrapper {
             if (!userRepository.existsByUsername("merchant@toyland.com")) {
                 User user = new User(
                         "merchant@toyland.com",
-                        encoder.encode("merchant123")
+                        encoder.encode("merchant123"),
+                        "Name"
                 );
                 Role role = roleRepository
                         .findByName(ERole.MERCHANT)
@@ -126,7 +128,8 @@ public class Bootstrapper {
             if (!userRepository.existsByUsername("admin@toyland.com")) {
                 User admin = new User(
                         "admin@toyland.com",
-                        encoder.encode("admin123")
+                        encoder.encode("admin123"),
+                        "Name"
                 );
                 Role role = roleRepository
                         .findByName(ERole.ADMIN)
