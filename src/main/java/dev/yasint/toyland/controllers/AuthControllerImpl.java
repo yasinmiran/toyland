@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -120,38 +119,6 @@ public class AuthControllerImpl implements AuthController {
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResDTO("You've been signed out!"));
-    }
-
-    @Override
-    @PostMapping("/register-driver")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> registerDriver(@Valid @RequestBody UserSignupReqDTO body) {
-
-        ERole eRole = ERole.DRIVER;
-
-        try {
-
-            userService.checkUserExistence(body.getUsername());
-
-            final User user = new User(
-                    body.getUsername(),
-                    encoder.encode(body.getPassword()),
-                    body.getName()
-            );
-
-            userService.createAndSaveUser(user, eRole);
-
-        } catch (UserExistsException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResDTO(e.getMessage()));
-        } catch (UnableToSatisfyException e) {
-            return ResponseEntity
-                    .internalServerError()
-                    .body(new MessageResDTO(e.getMessage()));
-        }
-
-        return ResponseEntity.ok(new MessageResDTO(eRole.name() + " user registered successfully!"));
     }
 
 }
