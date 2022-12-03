@@ -140,4 +140,43 @@ public class Bootstrapper {
         };
     }
 
+
+    @Bean("create_drivers")
+    @Transactional
+    @DependsOn("create_roles")
+    CommandLineRunner createDummyDrivers(
+            @Autowired final UserRepository userRepository,
+            @Autowired final DriverRepository driverRepository,
+            @Autowired final ContactRepository contactRepository,
+            @Autowired final RoleRepository roleRepository,
+            @Autowired final PasswordEncoder encoder
+    ) {
+        return (args) -> {
+            if (!userRepository.existsByUsername("driver@toyland.com")) {
+                User user = new User(
+                        "driver@toyland.com",
+                        encoder.encode("driver123"),
+                        "Name"
+                );
+                Role role = roleRepository
+                        .findByName(ERole.DRIVER)
+                        .orElseThrow(RuntimeException::new);
+                user.setRoles(new HashSet<>(List.of(role)));
+                Driver driver = new Driver();
+                Contact contact = Contact
+                        .builder()
+                        .addressLine1("42 Maine Street")
+                        .county("Dublin")
+                        .country("Ireland")
+                        .postcode("VP54K0")
+                        .mobileNo("+353894900445")
+                        .build();
+                driver.setUser(user);
+                userRepository.save(user);
+                contactRepository.save(contact);
+                driverRepository.save(driver);
+            }
+        };
+    }
+
 }

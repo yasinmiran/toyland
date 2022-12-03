@@ -7,9 +7,7 @@ import dev.yasint.toyland.models.Role;
 import dev.yasint.toyland.models.Subject;
 import dev.yasint.toyland.models.enumerations.ERole;
 import dev.yasint.toyland.models.enumerations.Event;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(

@@ -1,12 +1,13 @@
 package dev.yasint.toyland.models;
 
 import dev.yasint.toyland.models.enumerations.ERole;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
