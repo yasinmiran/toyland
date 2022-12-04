@@ -24,28 +24,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductControllerImpl implements ProductController {
 
-    private final ProductService productService;
-
+    
+    private final ProductService productService
     @Override
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO body) {
-        User user = Common.getUserDetailsFromContext().getUser();
-        Product product = productService.saveProduct(user, body.transform());
-        return ResponseEntity.ok().body(product);
+        User user = Common.getUserDetailsFromContext().getUser()
+        Product product = productService.saveProduct(user, body.transform())
+        return ResponseEntity.ok().body(product)
     }
 
     @Override
     @PostMapping("/bulk/add")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> addAllProducts(@Valid @RequestBody List<ProductDTO> products) {
-        User user = Common.getUserDetailsFromContext().getUser();
+        User user = Common.getUserDetailsFromContext().getUser()
         List<Product> savedProducts = productService.saveAllProducts(user,
                 products
                         .stream()
                         .map(ProductDTO::transform)
-                        .collect(Collectors.toList()));
-        return ResponseEntity.ok().body(savedProducts);
+                        .collect(Collectors.toList()))
+        return ResponseEntity.ok().body(savedProducts)
     }
 
     /**
@@ -59,41 +59,36 @@ public class ProductControllerImpl implements ProductController {
     public ResponseEntity<?> getProductDetails(@PathVariable("id") Long productId) {
         try {
             Product product = productService.findProductById(productId);
-            return ResponseEntity.ok().body(product);
+            return ResponseEntity.ok().body(product)
         } catch (ResourceAccessException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build()
         }
     }
 
     /**
-     * This is a public route. We use this endpoint to
-     * list the products in the landing page of the application.
-     * Hence, no point in adding pre-authorization checks
-     * for this route.
+     * Thia iS a public route and we use this route to list 
+     * all the products in the landing page of the applicaiton
      *
      * @return ResponseEntity
      */
     @Override
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        return ResponseEntity.ok()
-                .body(productService.getAllProducts());
+        return ResponseEntity.ok().body(productService.getAllProducts())
     }
 
     @Override
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> editProduct(@Valid @RequestBody Product product) {
-        return ResponseEntity.ok()
-                .body(new MessageResDTO("This feature is coming soon."));
+        return ResponseEntity.ok().body(new MessageResDTO("This feature is coming soon."))
     }
 
     @Override
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long productId) {
-        return ResponseEntity.ok()
-                .body(new MessageResDTO("This feature is coming soon."));
+        return ResponseEntity.ok().body(new MessageResDTO("This feature is coming soon."))
     }
 
 }
