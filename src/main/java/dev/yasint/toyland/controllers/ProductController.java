@@ -1,7 +1,6 @@
 package dev.yasint.toyland.controllers;
 
 import dev.yasint.toyland.dtos.request.ProductDTO;
-import dev.yasint.toyland.models.Product;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface ProductController {
 
     ResponseEntity<?> getProducts();
 
-    ResponseEntity<?> editProduct(Product product);
+    ResponseEntity<?> editProduct(ProductDTO product, Long productId);
 
     ResponseEntity<?> deleteProduct(Long productId);
 

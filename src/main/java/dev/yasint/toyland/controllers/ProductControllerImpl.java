@@ -87,10 +87,20 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> editProduct(@Valid @RequestBody Product product) {
-        return ResponseEntity.ok().body(new MessageResDTO("This feature is coming soon."));
+    public ResponseEntity<?> editProduct(@Valid @RequestBody ProductDTO body, @PathVariable("id") Long productId) {
+        try {
+            User user = Common.getUserDetailsFromContext().getUser();
+            Product product = productService.editProduct(user, body.transform(), productId);
+            return ResponseEntity.ok().body(product);
+        } catch (UnableToSatisfyException | ResourceAccessException e) {
+            return ResponseEntity.badRequest().body(
+                    new MessageResDTO(
+                            e.getMessage()
+                    )
+            );
+        }
     }
 
     @Override
