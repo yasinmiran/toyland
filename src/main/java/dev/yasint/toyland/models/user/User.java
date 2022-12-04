@@ -1,14 +1,13 @@
 package dev.yasint.toyland.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.yasint.toyland.models.InformationSubscription;
 import dev.yasint.toyland.models.Observer;
-import dev.yasint.toyland.models.Subject;
-import dev.yasint.toyland.models.enumerations.Event;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.yasint.toyland.models.Role;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import dev.yasint.toyland.models.Subject;
+import dev.yasint.toyland.models.enumerations.ERole;
+import dev.yasint.toyland.models.enumerations.Event;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(
@@ -59,7 +60,6 @@ public class User implements Subject, Observer {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.name = name;
     }
 
     public User(String username, String password, String name) {
@@ -89,4 +89,14 @@ public class User implements Subject, Observer {
 
         return observers;
     }
+
+    public boolean hasRole(ERole eRole) {
+        for (Role role : roles) {
+            if (role.getName().equals(eRole)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

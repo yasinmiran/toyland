@@ -120,10 +120,6 @@ public class OrderServiceImpl implements OrderService {
         // Set a dummy payment reference.
         // i.e., order.setPaymentReference("REFERENCE-123");
 
-        // TODO:
-        // Once the payment is succeeded, the system should
-        // auto allocate a Driver to pick up the items and
-        // do the delivery.
         Driver driver = driverService.getDriverByLowestDeliveries();
         if (driver == null) {
             log.error("No driver found. Unable to proceed with the order.");

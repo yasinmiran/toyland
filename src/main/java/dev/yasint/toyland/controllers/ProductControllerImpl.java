@@ -3,6 +3,7 @@ package dev.yasint.toyland.controllers;
 import dev.yasint.toyland.dtos.request.ProductDTO;
 import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.exceptions.ResourceAccessException;
+import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.models.Product;
 import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.ProductService;
@@ -30,9 +31,17 @@ public class ProductControllerImpl implements ProductController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO body) {
-        User user = Common.getUserDetailsFromContext().getUser();
-        Product product = productService.saveProduct(user, body.transform());
-        return ResponseEntity.ok().body(product);
+        try {
+            User user = Common.getUserDetailsFromContext().getUser();
+            Product product = productService.saveProduct(user, body.transform());
+            return ResponseEntity.ok().body(product);
+        } catch (UnableToSatisfyException e) {
+            return ResponseEntity.badRequest().body(
+                    new MessageResDTO(
+                            e.getMessage()
+                    )
+            );
+        }
     }
 
     @Override
@@ -41,10 +50,8 @@ public class ProductControllerImpl implements ProductController {
     public ResponseEntity<?> addAllProducts(@Valid @RequestBody List<ProductDTO> products) {
         User user = Common.getUserDetailsFromContext().getUser();
         List<Product> savedProducts = productService.saveAllProducts(user,
-                products
-                        .stream()
-                        .map(ProductDTO::transform)
-                        .collect(Collectors.toList()));
+                products.stream().map(ProductDTO::transform).collect(Collectors.toList()));
+
         return ResponseEntity.ok().body(savedProducts);
     }
 
@@ -76,24 +83,21 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        return ResponseEntity.ok()
-                .body(productService.getAllProducts());
+        return ResponseEntity.ok().body(productService.getAllProducts());
     }
 
     @Override
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> editProduct(@Valid @RequestBody Product product) {
-        return ResponseEntity.ok()
-                .body(new MessageResDTO("This feature is coming soon."));
+        return ResponseEntity.ok().body(new MessageResDTO("This feature is coming soon."));
     }
 
     @Override
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MERCHANT')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long productId) {
-        return ResponseEntity.ok()
-                .body(new MessageResDTO("This feature is coming soon."));
+        return ResponseEntity.ok().body(new MessageResDTO("This feature is coming soon."));
     }
 
 }

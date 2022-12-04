@@ -27,26 +27,22 @@ public class CartControllerImpl implements CartController {
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> addItemToCart(@RequestBody CartAddDTO body) {
         try {
-            Cart cart = cartService.addItemToCart(
-                    body.getProductId(),
-                    body.getQuantity()
+            Cart cart = cartService.addItemToCart(body.getProductId(),body.getQuantity()
             );
             return ResponseEntity.ok(cart);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (UnableToSatisfyException e) {
-            return ResponseEntity.internalServerError().body(
-                    new MessageResDTO(e.getMessage())
+            return ResponseEntity.internalServerError().body( new MessageResDTO(e.getMessage())
             );
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new MessageResDTO(e.getMessage())
+            return ResponseEntity.badRequest().body(  new MessageResDTO(e.getMessage())
             );
         }
     }
 
     /**
-     * FIXME(yasinmiran): Throws an exception when removing.
+     * TODO (@yasinmiran): Throws an exception when removing.
      *
      * @param id {Long} cart ID
      * @return ResponseEntity

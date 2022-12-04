@@ -7,8 +7,8 @@ import dev.yasint.toyland.dtos.response.MessageResDTO;
 import dev.yasint.toyland.dtos.response.UserInfoResDTO;
 import dev.yasint.toyland.exceptions.UnableToSatisfyException;
 import dev.yasint.toyland.exceptions.UserExistsException;
-import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.models.enumerations.ERole;
+import dev.yasint.toyland.models.user.User;
 import dev.yasint.toyland.services.UserDetailsImpl;
 import dev.yasint.toyland.services.UserService;
 import dev.yasint.toyland.utils.JWTUtils;
@@ -35,14 +35,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthControllerImpl implements AuthController {
 
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final PasswordEncoder encoder;
+    private final JWTUtils jwtUtils;
+
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PasswordEncoder encoder;
-    @Autowired
-    private JWTUtils jwtUtils;
+    public AuthControllerImpl(
+            AuthenticationManager authenticationManager,
+            UserService userService,
+            PasswordEncoder encoder,
+            JWTUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginReqDTO body) {
