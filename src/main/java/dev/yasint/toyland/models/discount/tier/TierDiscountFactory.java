@@ -9,6 +9,13 @@ import dev.yasint.toyland.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is a factory design pattern implementation used 
+ * to get the discounts of the various tiers.
+ * 
+ * The decorator design pattern is also demonstrated here
+ */
+
 @Component
 public class TierDiscountFactory {
 

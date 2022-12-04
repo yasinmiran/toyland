@@ -2,6 +2,10 @@ package dev.yasint.toyland.models.verification;
 
 import dev.yasint.toyland.models.enumerations.EVerificationStatus;
 
+/**
+ * The command design pattern is used here to trigger various verification levels
+ */
+
 public abstract class VerificationCommand {
 
     Verification verification;
