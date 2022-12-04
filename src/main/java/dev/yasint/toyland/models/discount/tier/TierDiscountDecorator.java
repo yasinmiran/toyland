@@ -2,8 +2,12 @@ package dev.yasint.toyland.models.discount.tier;
 
 import dev.yasint.toyland.models.discount.Discount;
 
-public abstract class TierDiscountDecorator implements Discount {
+/**
+ * This is a abstract class declaration of the various discount tiers
+ * using the discount interface
+ */
 
+public abstract class TierDiscountDecorator implements Discount {
     final Discount tempDiscount;
 
     public TierDiscountDecorator(Discount tempDiscount) {

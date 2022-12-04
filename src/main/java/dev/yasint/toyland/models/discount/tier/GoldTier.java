@@ -2,8 +2,11 @@ package dev.yasint.toyland.models.discount.tier;
 
 import dev.yasint.toyland.models.discount.Discount;
 
-public class GoldTier extends TierDiscountDecorator {
+/**
+ * A concrete implementation of the abstract tier class
+ */
 
+public class GoldTier extends TierDiscountDecorator {
     public GoldTier(Discount tempDiscount) {
         super(tempDiscount);
     }

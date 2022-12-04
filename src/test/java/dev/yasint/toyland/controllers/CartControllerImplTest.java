@@ -39,6 +39,9 @@ public class CartControllerImplTest {
     @AfterEach
     void tearDown() { }
 
+    /**
+     * A test to check if the dicount decorator functions as it should
+     */
     @Test
     void isDiscountApplied() {
         Discount discount = new ChristmasPromotion(
