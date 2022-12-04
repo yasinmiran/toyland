@@ -17,7 +17,11 @@ public class ObserverServiceImpl implements ObserverService{
     @Override
     public void update(Observer observer, Event event, Subject subject) {
         if (event.equals(Event.NEW_PRODUCT)) {
-            notificationBoxService.createNewNotification(observer.getId(), "A new product has been added by " + subject.getName());
+            notificationBoxService.createNewNotification(observer.getId(),
+                    "A new product has been added by " + subject.getName());
+        } else if (event.equals(Event.EDIT_PRODUCT)) {
+            notificationBoxService.createNewNotification(observer.getId(),
+                    "A product has been edited by " + subject.getName());
         }
     }
 }

@@ -65,4 +65,20 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.saveAll(products);
     }
 
+    @Override
+    public Product editProduct(User owner, Product partial, Long productId) throws UnableToSatisfyException, ResourceAccessException {
+        if (owner.hasRole(ERole.MERCHANT)) {
+            Merchant merchant = merchantRepository.findMerchantByUser(owner);
+            Product product = productRepository.findByIdAndMerchant(productId, merchant);
+            if (product == null) {
+                throw new ResourceAccessException();
+            }
+            partial.setMerchant(merchant);
+            partial.setId(productId);
+            subjectService.notifyObservers(owner, Event.EDIT_PRODUCT);
+            return productRepository.save(partial);
+        }
+        throw new UnableToSatisfyException();
+    }
+
 }

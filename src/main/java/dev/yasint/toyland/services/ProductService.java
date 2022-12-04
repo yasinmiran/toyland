@@ -19,4 +19,6 @@ public interface ProductService {
 
     List<Product> saveAllProducts(User owner, List<Product> products);
 
+    Product editProduct(User owner, Product partial, Long productId) throws UnableToSatisfyException, ResourceAccessException;
+
 }
